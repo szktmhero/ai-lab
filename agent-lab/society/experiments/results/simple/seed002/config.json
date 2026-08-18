@@ -1,0 +1,7 @@
+{
+  "policy": "simple",
+  "seed": 2,
+  "n_agents": 128,
+  "n_tasks": 5,
+  "max_rounds": 30
+}

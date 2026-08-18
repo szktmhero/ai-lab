@@ -1,0 +1,9 @@
+{
+  "policy": "random",
+  "seed": 2,
+  "steps": 1000,
+  "cell_count": 128,
+  "world_w": 32,
+  "world_h": 32,
+  "snapshot_interval": 10
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "task": 0,
+    "winner": 9,
+    "proposal_count": 61,
+    "events_this_task": 2176,
+    "agents_proposed": 53,
+    "agents_supported": 119,
+    "max_degree": 6,
+    "avg_degree": 6.0
+  },
+  {
+    "task": 1,
+    "winner": 17,
+    "proposal_count": 95,
+    "events_this_task": 2304,
+    "agents_proposed": 92,
+    "agents_supported": 126,
+    "max_degree": 6,
+    "avg_degree": 6.0
+  },
+  {
+    "task": 2,
+    "winner": 21,
+    "proposal_count": 86,
+    "events_this_task": 2176,
+    "agents_proposed": 109,
+    "agents_supported": 128,
+    "max_degree": 6,
+    "avg_degree": 6.0
+  },
+  {
+    "task": 3,
+    "winner": 33,
+    "proposal_count": 75,
+    "events_this_task": 2176,
+    "agents_proposed": 114,
+    "agents_supported": 128,
+    "max_degree": 6,
+    "avg_degree": 6.0
+  },
+  {
+    "task": 4,
+    "winner": 39,
+    "proposal_count": 105,
+    "events_this_task": 3072,
+    "agents_proposed": 123,
+    "agents_supported": 128,
+    "max_degree": 6,
+    "avg_degree": 6.0
+  }
+]

@@ -1,0 +1,1942 @@
+[
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 1,
+      "max": 128,
+      "mean": 18.929,
+      "final": 1
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 127,
+      "mean": 109.071,
+      "final": 127
+    },
+    "average_energy": {
+      "min": 8.3186,
+      "max": 100.0,
+      "mean": 45.942831399999996,
+      "final": 99.2
+    },
+    "energy_variance": {
+      "min": 0.0,
+      "max": 1257.446,
+      "mean": 184.87429939999998,
+      "final": 0.0
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.1562,
+      "mean": 0.1466351,
+      "final": 0.0
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 7,
+      "mean": 1.485,
+      "final": 1
+    },
+    "number_of_clusters": {
+      "min": 1,
+      "max": 104,
+      "mean": 15.005,
+      "final": 1
+    },
+    "average_signal_magnitude": {
+      "min": 0.1484,
+      "max": 1.0,
+      "mean": 0.9948365,
+      "final": 1.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0622,
+      "mean": 0.0305213,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 0.0,
+      "max": 19.2094,
+      "mean": 8.0485556,
+      "final": 0.0
+    },
+    "resource_consumption": {
+      "min": 3221.2323,
+      "max": 10198.6652,
+      "mean": 8814.612760600001,
+      "final": 10174.8286
+    },
+    "spatial_entropy": {
+      "min": 0.0,
+      "max": 5.7747,
+      "mean": 1.6897301000000002,
+      "final": 0.0
+    },
+    "signal_diversity": {
+      "min": 0.0,
+      "max": 1.6943,
+      "mean": 0.7073148,
+      "final": 0.0
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 4.86,
+    "final_alive": 1,
+    "policy": "random",
+    "seed": 0,
+    "exp_name": "random_seed00"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 19.214,
+      "final": 0
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 108.786,
+      "final": 128
+    },
+    "average_energy": {
+      "min": 0.0,
+      "max": 49.7924,
+      "mean": 16.571202399999997,
+      "final": 0.0
+    },
+    "energy_variance": {
+      "min": 0.0,
+      "max": 394.4521,
+      "mean": 71.95150509999999,
+      "final": 0.0
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.2031,
+      "mean": 0.14942630000000004,
+      "final": 0.0
+    },
+    "largest_cluster_size": {
+      "min": 0,
+      "max": 7,
+      "mean": 1.28,
+      "final": 0
+    },
+    "number_of_clusters": {
+      "min": 0,
+      "max": 104,
+      "mean": 15.225,
+      "final": 0
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.7412189000000001,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0623,
+      "mean": 0.031320100000000003,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 0.0,
+      "max": 19.105,
+      "mean": 7.9565965,
+      "final": 0.0
+    },
+    "resource_consumption": {
+      "min": 3168.0146,
+      "max": 10240.0,
+      "mean": 8803.0639232,
+      "final": 10240.0
+    },
+    "spatial_entropy": {
+      "min": 0.0,
+      "max": 5.7558,
+      "mean": 1.8692652,
+      "final": 0.0
+    },
+    "signal_diversity": {
+      "min": 0.0,
+      "max": 1.4876,
+      "mean": 0.6549836,
+      "final": 0.0
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 4.32,
+    "final_alive": 0,
+    "policy": "random",
+    "seed": 1,
+    "exp_name": "random_seed01"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 1,
+      "max": 128,
+      "mean": 21.011,
+      "final": 1
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 127,
+      "mean": 106.989,
+      "final": 127
+    },
+    "average_energy": {
+      "min": 12.8028,
+      "max": 80.5169,
+      "mean": 33.3023342,
+      "final": 65.8638
+    },
+    "energy_variance": {
+      "min": 0.0,
+      "max": 991.1132,
+      "mean": 146.3835589,
+      "final": 0.0
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.1875,
+      "mean": 0.1519213,
+      "final": 0.0
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 7,
+      "mean": 1.536,
+      "final": 1
+    },
+    "number_of_clusters": {
+      "min": 1,
+      "max": 104,
+      "mean": 17.034,
+      "final": 1
+    },
+    "average_signal_magnitude": {
+      "min": 0.1562,
+      "max": 1.0,
+      "mean": 0.9941092,
+      "final": 1.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0624,
+      "mean": 0.0385226,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 0.0,
+      "max": 16.3277,
+      "mean": 8.995186499999999,
+      "final": 0.0
+    },
+    "resource_consumption": {
+      "min": 3139.1354,
+      "max": 10196.6264,
+      "mean": 8669.3559006,
+      "final": 10189.748
+    },
+    "spatial_entropy": {
+      "min": 0.0,
+      "max": 5.7667,
+      "mean": 2.2663791,
+      "final": 0.0
+    },
+    "signal_diversity": {
+      "min": 0.0,
+      "max": 1.4066,
+      "mean": 0.757418,
+      "final": 0.0
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 4.73,
+    "final_alive": 1,
+    "policy": "random",
+    "seed": 2,
+    "exp_name": "random_seed02"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 19.044,
+      "final": 0
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 108.956,
+      "final": 128
+    },
+    "average_energy": {
+      "min": 0.0,
+      "max": 49.5774,
+      "mean": 10.590127899999999,
+      "final": 0.0
+    },
+    "energy_variance": {
+      "min": 0.0,
+      "max": 141.3066,
+      "mean": 24.835929099999998,
+      "final": 0.0
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.1875,
+      "mean": 0.1390544,
+      "final": 0.0
+    },
+    "largest_cluster_size": {
+      "min": 0,
+      "max": 6,
+      "mean": 1.151,
+      "final": 0
+    },
+    "number_of_clusters": {
+      "min": 0,
+      "max": 105,
+      "mean": 15.231,
+      "final": 0
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.650547,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0623,
+      "mean": 0.0298532,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 0.0,
+      "max": 17.088,
+      "mean": 7.732783599999999,
+      "final": 0.0
+    },
+    "resource_consumption": {
+      "min": 3177.7388,
+      "max": 10240.0,
+      "mean": 8807.7253034,
+      "final": 10240.0
+    },
+    "spatial_entropy": {
+      "min": 0.0,
+      "max": 5.7791,
+      "mean": 1.7812129,
+      "final": 0.0
+    },
+    "signal_diversity": {
+      "min": 0.0,
+      "max": 1.3274,
+      "mean": 0.6081531,
+      "final": 0.0
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 4.2,
+    "final_alive": 0,
+    "policy": "random",
+    "seed": 3,
+    "exp_name": "random_seed03"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 19.417,
+      "final": 0
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 108.583,
+      "final": 128
+    },
+    "average_energy": {
+      "min": 0.0,
+      "max": 49.885,
+      "mean": 10.491348000000002,
+      "final": 0.0
+    },
+    "energy_variance": {
+      "min": 0.0,
+      "max": 102.1211,
+      "mean": 22.1550922,
+      "final": 0.0
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.25,
+      "mean": 0.14430349999999997,
+      "final": 0.0
+    },
+    "largest_cluster_size": {
+      "min": 0,
+      "max": 8,
+      "mean": 1.143,
+      "final": 0
+    },
+    "number_of_clusters": {
+      "min": 0,
+      "max": 106,
+      "mean": 15.094,
+      "final": 0
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.6314924,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0623,
+      "mean": 0.0277833,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 0.0,
+      "max": 21.2603,
+      "mean": 7.620972900000001,
+      "final": 0.0
+    },
+    "resource_consumption": {
+      "min": 3241.2588,
+      "max": 10240.0,
+      "mean": 8773.318039900001,
+      "final": 10240.0
+    },
+    "spatial_entropy": {
+      "min": 0.0,
+      "max": 5.7108,
+      "mean": 1.6783789000000002,
+      "final": 0.0
+    },
+    "signal_diversity": {
+      "min": 0.0,
+      "max": 1.4443,
+      "mean": 0.5823463000000001,
+      "final": 0.0
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 4.52,
+    "final_alive": 0,
+    "policy": "random",
+    "seed": 4,
+    "exp_name": "random_seed04"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 18.222,
+      "final": 0
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 109.778,
+      "final": 128
+    },
+    "average_energy": {
+      "min": 0.0,
+      "max": 49.7954,
+      "mean": 12.8987603,
+      "final": 0.0
+    },
+    "energy_variance": {
+      "min": 0.0,
+      "max": 490.4133,
+      "mean": 56.2207204,
+      "final": 0.0
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.25,
+      "mean": 0.1388107,
+      "final": 0.0
+    },
+    "largest_cluster_size": {
+      "min": 0,
+      "max": 9,
+      "mean": 1.006,
+      "final": 0
+    },
+    "number_of_clusters": {
+      "min": 0,
+      "max": 104,
+      "mean": 14.222,
+      "final": 0
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.5286799,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0623,
+      "mean": 0.0185423,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 0.0,
+      "max": 14.3178,
+      "mean": 4.2520203,
+      "final": 0.0
+    },
+    "resource_consumption": {
+      "min": 3132.7164,
+      "max": 10240.0,
+      "mean": 8844.8082629,
+      "final": 10240.0
+    },
+    "spatial_entropy": {
+      "min": 0.0,
+      "max": 5.7955,
+      "mean": 1.2878003999999998,
+      "final": 0.0
+    },
+    "signal_diversity": {
+      "min": 0.0,
+      "max": 1.3773,
+      "mean": 0.3640337,
+      "final": 0.0
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 4.04,
+    "final_alive": 0,
+    "policy": "random",
+    "seed": 5,
+    "exp_name": "random_seed05"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 1,
+      "max": 128,
+      "mean": 18.706,
+      "final": 1
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 127,
+      "mean": 109.294,
+      "final": 127
+    },
+    "average_energy": {
+      "min": 6.0777,
+      "max": 63.0276,
+      "mean": 30.589677599999998,
+      "final": 54.1177
+    },
+    "energy_variance": {
+      "min": 0.0,
+      "max": 169.7077,
+      "mean": 27.8468817,
+      "final": 0.0
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.3281,
+      "mean": 0.1424817,
+      "final": 0.0
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 9,
+      "mean": 1.529,
+      "final": 1
+    },
+    "number_of_clusters": {
+      "min": 1,
+      "max": 103,
+      "mean": 14.568,
+      "final": 1
+    },
+    "average_signal_magnitude": {
+      "min": 0.1719,
+      "max": 1.0,
+      "mean": 0.9942109,
+      "final": 1.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0623,
+      "mean": 0.0252387,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 0.0,
+      "max": 21.9317,
+      "mean": 7.2122242,
+      "final": 0.0
+    },
+    "resource_consumption": {
+      "min": 3205.2595,
+      "max": 10196.4143,
+      "mean": 8839.976026500002,
+      "final": 10175.1655
+    },
+    "spatial_entropy": {
+      "min": 0.0,
+      "max": 5.7132,
+      "mean": 1.4948173999999999,
+      "final": 0.0
+    },
+    "signal_diversity": {
+      "min": 0.0,
+      "max": 1.533,
+      "mean": 0.5509987,
+      "final": 0.0
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 4.54,
+    "final_alive": 1,
+    "policy": "random",
+    "seed": 6,
+    "exp_name": "random_seed06"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 19.044,
+      "final": 0
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 108.956,
+      "final": 128
+    },
+    "average_energy": {
+      "min": 0.0,
+      "max": 50.0135,
+      "mean": 12.8631984,
+      "final": 0.0
+    },
+    "energy_variance": {
+      "min": 0.0,
+      "max": 217.3822,
+      "mean": 28.4989678,
+      "final": 0.0
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.3438,
+      "mean": 0.1490805,
+      "final": 0.0
+    },
+    "largest_cluster_size": {
+      "min": 0,
+      "max": 9,
+      "mean": 1.229,
+      "final": 0
+    },
+    "number_of_clusters": {
+      "min": 0,
+      "max": 105,
+      "mean": 14.915,
+      "final": 0
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.6813518000000001,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0623,
+      "mean": 0.0237019,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 0.0,
+      "max": 13.8068,
+      "mean": 5.268670400000001,
+      "final": 0.0
+    },
+    "resource_consumption": {
+      "min": 3210.3691,
+      "max": 10240.0,
+      "mean": 8808.9757015,
+      "final": 10240.0
+    },
+    "spatial_entropy": {
+      "min": 0.0,
+      "max": 5.7204,
+      "mean": 1.5460509000000002,
+      "final": 0.0
+    },
+    "signal_diversity": {
+      "min": 0.0,
+      "max": 1.6278,
+      "mean": 0.4684254,
+      "final": 0.0
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 4.44,
+    "final_alive": 0,
+    "policy": "random",
+    "seed": 7,
+    "exp_name": "random_seed07"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 17.708,
+      "final": 0
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 110.292,
+      "final": 128
+    },
+    "average_energy": {
+      "min": 0.0,
+      "max": 49.8202,
+      "mean": 8.1262656,
+      "final": 0.0
+    },
+    "energy_variance": {
+      "min": 0.0,
+      "max": 148.4875,
+      "mean": 25.4310422,
+      "final": 0.0
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.2656,
+      "mean": 0.13935129999999998,
+      "final": 0.0
+    },
+    "largest_cluster_size": {
+      "min": 0,
+      "max": 9,
+      "mean": 0.911,
+      "final": 0
+    },
+    "number_of_clusters": {
+      "min": 0,
+      "max": 105,
+      "mean": 13.785,
+      "final": 0
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.4085004,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0623,
+      "mean": 0.0181855,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 0.0,
+      "max": 12.9577,
+      "mean": 3.8000825999999996,
+      "final": 0.0
+    },
+    "resource_consumption": {
+      "min": 3205.3887,
+      "max": 10240.0,
+      "mean": 8900.285625499999,
+      "final": 10240.0
+    },
+    "spatial_entropy": {
+      "min": 0.0,
+      "max": 5.773,
+      "mean": 1.2882142,
+      "final": 0.0
+    },
+    "signal_diversity": {
+      "min": 0.0,
+      "max": 1.2418,
+      "mean": 0.3339177,
+      "final": 0.0
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 4.08,
+    "final_alive": 0,
+    "policy": "random",
+    "seed": 8,
+    "exp_name": "random_seed08"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 18.986,
+      "final": 0
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 128,
+      "mean": 109.014,
+      "final": 128
+    },
+    "average_energy": {
+      "min": 0.0,
+      "max": 49.8414,
+      "mean": 17.8224928,
+      "final": 0.0
+    },
+    "energy_variance": {
+      "min": 0.0,
+      "max": 625.6559,
+      "mean": 67.2783249,
+      "final": 0.0
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.2188,
+      "mean": 0.13644979999999998,
+      "final": 0.0
+    },
+    "largest_cluster_size": {
+      "min": 0,
+      "max": 8,
+      "mean": 1.262,
+      "final": 0
+    },
+    "number_of_clusters": {
+      "min": 0,
+      "max": 104,
+      "mean": 15.079,
+      "final": 0
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.7779140999999999,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0623,
+      "mean": 0.0244746,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 0.0,
+      "max": 22.6274,
+      "mean": 6.704099899999999,
+      "final": 0.0
+    },
+    "resource_consumption": {
+      "min": 3187.9687,
+      "max": 10240.0,
+      "mean": 8807.715089500001,
+      "final": 10240.0
+    },
+    "spatial_entropy": {
+      "min": 0.0,
+      "max": 5.7745,
+      "mean": 1.5896716999999998,
+      "final": 0.0
+    },
+    "signal_diversity": {
+      "min": 0.0,
+      "max": 1.5434,
+      "mean": 0.5008869,
+      "final": 0.0
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 4.35,
+    "final_alive": 0,
+    "policy": "random",
+    "seed": 9,
+    "exp_name": "random_seed09"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 39,
+      "max": 128,
+      "mean": 54.059,
+      "final": 39
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 89,
+      "mean": 73.941,
+      "final": 89
+    },
+    "average_energy": {
+      "min": 13.3724,
+      "max": 49.2563,
+      "mean": 20.474053599999998,
+      "final": 21.7245
+    },
+    "energy_variance": {
+      "min": 0.0137,
+      "max": 49.75,
+      "mean": 12.6691769,
+      "final": 2.406
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.2846,
+      "mean": 0.399488,
+      "final": 0.4615
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 10,
+      "mean": 2.489,
+      "final": 2
+    },
+    "number_of_clusters": {
+      "min": 31,
+      "max": 108,
+      "mean": 46.352,
+      "final": 33
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 11.7013,
+      "max": 12.8421,
+      "mean": 12.2689608,
+      "final": 12.1123
+    },
+    "resource_consumption": {
+      "min": 3141.1393,
+      "max": 7739.2559,
+      "mean": 6180.3123661,
+      "final": 7726.4707
+    },
+    "spatial_entropy": {
+      "min": 4.3168,
+      "max": 5.7389,
+      "mean": 4.938439700000001,
+      "final": 4.6826
+    },
+    "signal_diversity": {
+      "min": 1.0079,
+      "max": 1.0263,
+      "mean": 1.0220001,
+      "final": 1.0263
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 13.09,
+    "final_alive": 39,
+    "policy": "rule_based",
+    "seed": 0,
+    "exp_name": "rule_based_seed00"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 34,
+      "max": 128,
+      "mean": 48.726,
+      "final": 34
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 94,
+      "mean": 79.274,
+      "final": 94
+    },
+    "average_energy": {
+      "min": 13.6628,
+      "max": 49.2539,
+      "mean": 20.6737435,
+      "final": 21.5154
+    },
+    "energy_variance": {
+      "min": 0.0133,
+      "max": 53.4319,
+      "mean": 10.6109351,
+      "final": 2.934
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.2812,
+      "mean": 0.3764394,
+      "final": 0.2353
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 8,
+      "mean": 2.442,
+      "final": 2
+    },
+    "number_of_clusters": {
+      "min": 26,
+      "max": 108,
+      "mean": 41.484,
+      "final": 32
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 11.7921,
+      "max": 12.7518,
+      "mean": 12.2967572,
+      "final": 12.1694
+    },
+    "resource_consumption": {
+      "min": 3229.2406,
+      "max": 8166.5161,
+      "mean": 6668.370500399999,
+      "final": 8137.6755
+    },
+    "spatial_entropy": {
+      "min": 4.2195,
+      "max": 5.8365,
+      "mean": 4.8020929,
+      "final": 4.7711
+    },
+    "signal_diversity": {
+      "min": 1.0079,
+      "max": 1.0303,
+      "mean": 1.0258401000000001,
+      "final": 1.0303
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 11.81,
+    "final_alive": 34,
+    "policy": "rule_based",
+    "seed": 1,
+    "exp_name": "rule_based_seed01"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 40,
+      "max": 128,
+      "mean": 54.051,
+      "final": 40
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 88,
+      "mean": 73.949,
+      "final": 88
+    },
+    "average_energy": {
+      "min": 12.144,
+      "max": 49.2656,
+      "mean": 20.4369241,
+      "final": 21.6142
+    },
+    "energy_variance": {
+      "min": 0.0154,
+      "max": 50.272,
+      "mean": 12.5314476,
+      "final": 3.4434
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.3125,
+      "mean": 0.39919849999999996,
+      "final": 0.45
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 8,
+      "mean": 2.527,
+      "final": 3
+    },
+    "number_of_clusters": {
+      "min": 31,
+      "max": 104,
+      "mean": 46.17,
+      "final": 34
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 11.9204,
+      "max": 12.7923,
+      "mean": 12.375774,
+      "final": 12.2989
+    },
+    "resource_consumption": {
+      "min": 3130.6059,
+      "max": 7669.2992,
+      "mean": 6193.6120357,
+      "final": 7654.2588
+    },
+    "spatial_entropy": {
+      "min": 4.4157,
+      "max": 5.7627,
+      "mean": 4.9466325,
+      "final": 4.6842
+    },
+    "signal_diversity": {
+      "min": 1.0079,
+      "max": 1.0256,
+      "mean": 1.0219736000000001,
+      "final": 1.0256
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 13.33,
+    "final_alive": 40,
+    "policy": "rule_based",
+    "seed": 2,
+    "exp_name": "rule_based_seed02"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 46,
+      "max": 128,
+      "mean": 59.027,
+      "final": 46
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 82,
+      "mean": 68.973,
+      "final": 82
+    },
+    "average_energy": {
+      "min": 14.1271,
+      "max": 49.2492,
+      "mean": 20.413613299999998,
+      "final": 20.3926
+    },
+    "energy_variance": {
+      "min": 0.0123,
+      "max": 51.012,
+      "mean": 12.2665772,
+      "final": 5.0976
+    },
+    "average_neighbor_count": {
+      "min": 0.0392,
+      "max": 1.1562,
+      "mean": 0.4408345,
+      "final": 0.4348
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 7,
+      "mean": 2.705,
+      "final": 2
+    },
+    "number_of_clusters": {
+      "min": 34,
+      "max": 106,
+      "mean": 50.565,
+      "final": 42
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 11.6174,
+      "max": 12.6452,
+      "mean": 12.269217,
+      "final": 12.081
+    },
+    "resource_consumption": {
+      "min": 3215.1474,
+      "max": 6972.525,
+      "mean": 5761.141135400001,
+      "final": 6972.525
+    },
+    "spatial_entropy": {
+      "min": 4.5199,
+      "max": 5.7214,
+      "mean": 5.065497199999999,
+      "final": 4.9854
+    },
+    "signal_diversity": {
+      "min": 1.0079,
+      "max": 1.0222,
+      "mean": 1.0191845999999998,
+      "final": 1.0222
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 14.4,
+    "final_alive": 46,
+    "policy": "rule_based",
+    "seed": 3,
+    "exp_name": "rule_based_seed03"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 42,
+      "max": 128,
+      "mean": 57.087,
+      "final": 42
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 86,
+      "mean": 70.913,
+      "final": 86
+    },
+    "average_energy": {
+      "min": 13.848,
+      "max": 49.2422,
+      "mean": 20.3529507,
+      "final": 20.8552
+    },
+    "energy_variance": {
+      "min": 0.0109,
+      "max": 52.1511,
+      "mean": 12.490279999999998,
+      "final": 5.0466
+    },
+    "average_neighbor_count": {
+      "min": 0.0465,
+      "max": 1.2656,
+      "mean": 0.4269094,
+      "final": 0.5238
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 8,
+      "mean": 2.602,
+      "final": 3
+    },
+    "number_of_clusters": {
+      "min": 34,
+      "max": 103,
+      "mean": 48.516,
+      "final": 35
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 11.6757,
+      "max": 12.7737,
+      "mean": 12.2956368,
+      "final": 11.9954
+    },
+    "resource_consumption": {
+      "min": 2855.4786,
+      "max": 7480.8483,
+      "mean": 5878.0224688,
+      "final": 7404.72
+    },
+    "spatial_entropy": {
+      "min": 4.3204,
+      "max": 5.6941,
+      "mean": 5.0031664000000005,
+      "final": 4.7014
+    },
+    "signal_diversity": {
+      "min": 1.0079,
+      "max": 1.0244,
+      "mean": 1.0205119999999999,
+      "final": 1.0244
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 13.97,
+    "final_alive": 42,
+    "policy": "rule_based",
+    "seed": 4,
+    "exp_name": "rule_based_seed04"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 38,
+      "max": 128,
+      "mean": 52.039,
+      "final": 38
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 90,
+      "mean": 75.961,
+      "final": 90
+    },
+    "average_energy": {
+      "min": 13.1795,
+      "max": 49.2516,
+      "mean": 20.5328734,
+      "final": 21.3342
+    },
+    "energy_variance": {
+      "min": 0.0128,
+      "max": 53.0505,
+      "mean": 11.5722981,
+      "final": 5.867
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.2188,
+      "mean": 0.3915759,
+      "final": 0.2105
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 8,
+      "mean": 2.531,
+      "final": 2
+    },
+    "number_of_clusters": {
+      "min": 29,
+      "max": 105,
+      "mean": 44.595,
+      "final": 37
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 11.8161,
+      "max": 12.6917,
+      "mean": 12.323042599999999,
+      "final": 12.0072
+    },
+    "resource_consumption": {
+      "min": 2888.5082,
+      "max": 7856.3663,
+      "mean": 6371.3511293,
+      "final": 7819.2511
+    },
+    "spatial_entropy": {
+      "min": 4.3425,
+      "max": 5.6833,
+      "mean": 4.8973597,
+      "final": 4.8269
+    },
+    "signal_diversity": {
+      "min": 1.0079,
+      "max": 1.027,
+      "mean": 1.0233913999999997,
+      "final": 1.027
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 12.69,
+    "final_alive": 38,
+    "policy": "rule_based",
+    "seed": 5,
+    "exp_name": "rule_based_seed05"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 39,
+      "max": 128,
+      "mean": 55.411,
+      "final": 39
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 89,
+      "mean": 72.589,
+      "final": 89
+    },
+    "average_energy": {
+      "min": 13.5781,
+      "max": 49.2586,
+      "mean": 20.290007699999997,
+      "final": 21.0231
+    },
+    "energy_variance": {
+      "min": 0.0141,
+      "max": 44.6198,
+      "mean": 12.704668300000002,
+      "final": 5.0599
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.2222,
+      "mean": 0.3987456,
+      "final": 0.4103
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 8,
+      "mean": 2.527,
+      "final": 3
+    },
+    "number_of_clusters": {
+      "min": 29,
+      "max": 104,
+      "mean": 47.302,
+      "final": 33
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 11.7836,
+      "max": 12.8571,
+      "mean": 12.3204562,
+      "final": 12.5025
+    },
+    "resource_consumption": {
+      "min": 2846.9851,
+      "max": 7708.2047,
+      "mean": 5994.4705036,
+      "final": 7701.7238
+    },
+    "spatial_entropy": {
+      "min": 4.3555,
+      "max": 5.7069,
+      "mean": 4.966634699999999,
+      "final": 4.8751
+    },
+    "signal_diversity": {
+      "min": 1.0079,
+      "max": 1.0263,
+      "mean": 1.0216321999999998,
+      "final": 1.0263
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 13.79,
+    "final_alive": 39,
+    "policy": "rule_based",
+    "seed": 6,
+    "exp_name": "rule_based_seed06"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 43,
+      "max": 128,
+      "mean": 57.754,
+      "final": 43
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 85,
+      "mean": 70.246,
+      "final": 85
+    },
+    "average_energy": {
+      "min": 13.5486,
+      "max": 49.2609,
+      "mean": 20.3968545,
+      "final": 20.3307
+    },
+    "energy_variance": {
+      "min": 0.0146,
+      "max": 47.6746,
+      "mean": 13.0184126,
+      "final": 7.9165
+    },
+    "average_neighbor_count": {
+      "min": 0.0444,
+      "max": 1.2188,
+      "mean": 0.4150794,
+      "final": 0.2791
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 7,
+      "mean": 2.619,
+      "final": 2
+    },
+    "number_of_clusters": {
+      "min": 33,
+      "max": 107,
+      "mean": 49.435,
+      "final": 38
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 11.9439,
+      "max": 12.696,
+      "mean": 12.3341107,
+      "final": 12.3412
+    },
+    "resource_consumption": {
+      "min": 3125.6884,
+      "max": 7315.4408,
+      "mean": 5886.2210417999995,
+      "final": 7269.0382
+    },
+    "spatial_entropy": {
+      "min": 4.6009,
+      "max": 5.7181,
+      "mean": 5.0475979,
+      "final": 4.7049
+    },
+    "signal_diversity": {
+      "min": 1.0079,
+      "max": 1.0238,
+      "mean": 1.0198767,
+      "final": 1.0238
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 13.49,
+    "final_alive": 43,
+    "policy": "rule_based",
+    "seed": 7,
+    "exp_name": "rule_based_seed07"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 38,
+      "max": 128,
+      "mean": 52.517,
+      "final": 38
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 90,
+      "mean": 75.483,
+      "final": 90
+    },
+    "average_energy": {
+      "min": 12.8059,
+      "max": 49.2633,
+      "mean": 20.5507153,
+      "final": 21.7097
+    },
+    "energy_variance": {
+      "min": 0.015,
+      "max": 48.1011,
+      "mean": 11.1951963,
+      "final": 7.324
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.4062,
+      "mean": 0.3905896,
+      "final": 0.2632
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 11,
+      "mean": 2.561,
+      "final": 2
+    },
+    "number_of_clusters": {
+      "min": 30,
+      "max": 105,
+      "mean": 44.797,
+      "final": 36
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 11.3967,
+      "max": 12.7291,
+      "mean": 12.104023699999997,
+      "final": 12.1852
+    },
+    "resource_consumption": {
+      "min": 3057.4058,
+      "max": 7814.4819,
+      "mean": 6310.2303957,
+      "final": 7784.4111
+    },
+    "spatial_entropy": {
+      "min": 4.3108,
+      "max": 5.7019,
+      "mean": 4.911908400000001,
+      "final": 4.7871
+    },
+    "signal_diversity": {
+      "min": 1.0079,
+      "max": 1.027,
+      "mean": 1.0230315999999997,
+      "final": 1.027
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 12.33,
+    "final_alive": 38,
+    "policy": "rule_based",
+    "seed": 8,
+    "exp_name": "rule_based_seed08"
+  },
+  {
+    "step": {
+      "min": 1,
+      "max": 1000,
+      "mean": 500.5,
+      "final": 1000
+    },
+    "alive_cells": {
+      "min": 35,
+      "max": 128,
+      "mean": 51.398,
+      "final": 35
+    },
+    "dead_cells": {
+      "min": 0,
+      "max": 93,
+      "mean": 76.602,
+      "final": 93
+    },
+    "average_energy": {
+      "min": 12.3816,
+      "max": 49.2516,
+      "mean": 20.201231,
+      "final": 21.6759
+    },
+    "energy_variance": {
+      "min": 0.0128,
+      "max": 50.1502,
+      "mean": 13.645443299999998,
+      "final": 4.4423
+    },
+    "average_neighbor_count": {
+      "min": 0.0,
+      "max": 1.375,
+      "mean": 0.39586020000000005,
+      "final": 0.5143
+    },
+    "largest_cluster_size": {
+      "min": 1,
+      "max": 8,
+      "mean": 2.517,
+      "final": 2
+    },
+    "number_of_clusters": {
+      "min": 26,
+      "max": 108,
+      "mean": 43.825,
+      "final": 32
+    },
+    "average_signal_magnitude": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "signal_variance": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "average_distance_between_cells": {
+      "min": 11.5368,
+      "max": 12.8687,
+      "mean": 12.287349200000001,
+      "final": 12.0397
+    },
+    "resource_consumption": {
+      "min": 2920.9355,
+      "max": 8050.0146,
+      "mean": 6343.189636600001,
+      "final": 7988.7325
+    },
+    "spatial_entropy": {
+      "min": 4.1719,
+      "max": 5.7732,
+      "mean": 4.848700299999999,
+      "final": 4.615
+    },
+    "signal_diversity": {
+      "min": 1.0079,
+      "max": 1.0294,
+      "mean": 1.0242622000000001,
+      "final": 1.0294
+    },
+    "cell_state_diversity": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "elapsed_seconds": 11.88,
+    "final_alive": 35,
+    "policy": "rule_based",
+    "seed": 9,
+    "exp_name": "rule_based_seed09"
+  }
+]

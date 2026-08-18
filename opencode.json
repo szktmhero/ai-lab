@@ -1,0 +1,46 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "subagent_depth": 2,
+  "agent": {
+    "security": {
+      "model": "opencode/deepseek-v4-flash-free",
+      "mode": "subagent",
+      "description": "セキュリティ脆弱性分析に特化",
+      "permission": {
+        "edit": "deny",
+        "bash": "deny"
+      },
+      "steps": 10
+    },
+    "performance": {
+      "model": "opencode/glm-5-free",
+      "mode": "subagent",
+      "description": "パフォーマンス問題分析に特化",
+      "permission": {
+        "edit": "deny",
+        "bash": "deny"
+      },
+      "steps": 10
+    },
+    "architecture": {
+      "model": "opencode/kimi-k2.5-free",
+      "mode": "subagent",
+      "description": "アーキテクチャ・設計分析に特化",
+      "permission": {
+        "edit": "deny",
+        "bash": "deny"
+      },
+      "steps": 10
+    },
+    "coordinator": {
+      "model": "opencode/big-pickle",
+      "mode": "subagent",
+      "description": "結果統合・優先順位付け",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      },
+      "steps": 15
+    }
+  }
+}

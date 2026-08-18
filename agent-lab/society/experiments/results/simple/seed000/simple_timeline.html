@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Timeline</title>
+    <style>
+        body { margin: 0; background: #1a1a2e; color: #eee; font-family: monospace; padding: 20px; }
+        .round { display: flex; align-items: center; margin: 2px 0; }
+        .round-num { width: 40px; color: #888; }
+        .bar { height: 16px; margin: 1px 0; border-radius: 2px; }
+        .propose { background: #e94560; }
+        .support { background: #4ecca3; }
+        .oppose { background: #ff6b6b; }
+        .contact { background: #3498db; }
+        .follow { background: #9b59b6; }
+        .other { background: #555; }
+    </style>
+</head>
+<body>
+    <h2>Event Timeline</h2>
+    <div id="timeline"></div>
+    <script>
+        const data = [{"round": 0, "counts": {"propose": 185, "support": 369, "follow": 86}}, {"round": 1, "counts": {"support": 216, "follow": 99, "share_information": 102, "wait": 222, "share_failed": 1}}, {"round": 2, "counts": {"wait": 313, "share_information": 186, "support": 43, "follow": 98}}, {"round": 3, "counts": {"wait": 359, "follow": 94, "share_information": 178, "support": 9}}, {"round": 4, "counts": {"follow": 95, "wait": 364, "share_information": 179, "support": 2}}, {"round": 5, "counts": {"wait": 371, "follow": 79, "share_information": 190}}, {"round": 6, "counts": {"wait": 373, "follow": 77, "share_information": 190}}, {"round": 7, "counts": {"share_information": 197, "wait": 357, "follow": 85, "support": 1}}, {"round": 8, "counts": {"share_information": 203, "wait": 350, "follow": 87}}, {"round": 9, "counts": {"wait": 363, "share_information": 198, "follow": 79}}, {"round": 10, "counts": {"wait": 370, "share_information": 195, "follow": 75}}, {"round": 11, "counts": {"follow": 93, "wait": 350, "share_information": 197}}, {"round": 12, "counts": {"share_information": 190, "wait": 362, "follow": 88}}, {"round": 13, "counts": {"wait": 384, "share_information": 169, "follow": 87}}, {"round": 14, "counts": {"follow": 82, "share_information": 214, "wait": 344}}, {"round": 15, "counts": {"follow": 79, "wait": 365, "share_information": 196}}, {"round": 16, "counts": {"wait": 371, "follow": 71, "share_information": 198}}];
+        const container = document.getElementById('timeline');
+        const types = ['propose', 'support', 'oppose', 'contact', 'follow', 'other'];
+
+        for (const round of data) {
+            const div = document.createElement('div');
+            div.className = 'round';
+            div.innerHTML = `<span class="round-num">${round.round}</span>`;
+
+            for (const t of types) {
+                const count = round.counts[t] || 0;
+                if (count > 0) {
+                    const bar = document.createElement('div');
+                    bar.className = `bar ${t}`;
+                    bar.style.width = (count * 8) + 'px';
+                    bar.title = `${t}: ${count}`;
+                    div.appendChild(bar);
+                }
+            }
+            container.appendChild(div);
+        }
+    </script>
+</body>
+</html>
