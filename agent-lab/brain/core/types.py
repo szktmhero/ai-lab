@@ -133,6 +133,12 @@ class ModelOutput:
     scores: tuple[float, ...]
     mode: str
     used_signal_ids: tuple[str, ...]
+    input_units: int = 0
+    output_units: int = 0
+    response_id: str | None = None
+    model_id: str | None = None
+    request_hash: str | None = None
+    output_hash: str | None = None
 
 
 @dataclass(frozen=True)
@@ -142,6 +148,7 @@ class Usage:
     model_calls: int
     input_units: int
     output_units: int
+    unit_name: str = "signals"
 
 
 @dataclass(frozen=True)

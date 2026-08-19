@@ -98,4 +98,7 @@ class DeterministicModelAdapter(ModelAdapter):
             scores=tuple(totals),
             mode=mode,
             used_signal_ids=tuple(signal.signal_id for signal in relevant),
+            input_units=len(signals),
+            output_units=1,
+            model_id="deterministic-test-double-v1",
         )

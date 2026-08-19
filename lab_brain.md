@@ -142,3 +142,25 @@ recovery gain over both strong non-brain baselines; at least a ten-point selecti
 memory and fault-recovery ablation effect; and no more than a two-point accuracy
 loss for at least ten percent lower compute in the adaptive-routing comparison.
 These thresholds must be accepted or replaced before, not after, a formal run.
+
+## Phase 3 implementation checkpoint — 2026-08-20
+
+Items 1–4 are now implemented and frozen in
+`agent-lab/brain/experiments/formal_protocol.lock.json`:
+
+- one condition-blind `OpenAIResponsesAdapter` using the dated
+  `gpt-5.4-mini-2026-03-17` snapshot and OpenAI Python SDK `2.51.0`, reasoning
+  effort `none`, no tools, no conversation state, zero SDK retries, fixed
+  timeout/request pacing, and schema-constrained output;
+- equal four-call / 8,192-input-token / 512-output-token hard caps with exact
+  provider-side preflight and response-usage reconciliation;
+- a new 800-task `brain-blind-v1` holdout generated from ten matched seeds and
+  protected by an evaluator-inclusive suite hash;
+- the hypotheses, paired-seed metrics, effect thresholds, condition
+  randomization, abort policy, mechanical threshold decision rules, executable
+  source hash, and interpretation labels above.
+
+Item 5 is intentionally pending: no paid blind inference has been made, so the
+suite remains outcome-unobserved. Item 6 is enforced by the report contract but
+cannot be evaluated until that run exists. A development smoke test must use
+pilot tasks, never the blind split.

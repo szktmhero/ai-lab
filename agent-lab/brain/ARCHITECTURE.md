@@ -52,8 +52,11 @@ memory, random state, condition name, task answer, or evaluator reference. Its
 four modes are small evidence aggregation operations. Architecture controls
 which public signals reach which mode; it does not replace the adapter.
 
-A future real adapter must implement the same `ModelAdapter.infer` contract and
-report real token usage through `InferenceBudget`.
+Phase 3 implements `OpenAIResponsesAdapter` behind the same
+`ModelAdapter.infer` contract. It aliases signal IDs before prompting, hashes
+provenance roots, ignores dynamic state, exposes no condition or evaluator data,
+uses no conversation state, and returns schema-constrained decisions. All eight
+conditions share one adapter instance and the same immutable token limits.
 
 ## Persistent memory and individuality tests
 
@@ -72,10 +75,21 @@ history and cue are designed, it is not classified as emergent personality.
 
 ## Budget semantics
 
-`InferenceBudget.consume` checks limits before every adapter call. A rejected call
-does not mutate accounting. The pilot unit is one structured signal, not a model
-token. This keeps deterministic tests exact but is not sufficient for a real-model
-claim; tokenization and cached-input policy must be frozen for that phase.
+`InferenceBudget.ensure_can_consume` checks limits without mutation and
+`InferenceBudget.consume` commits successful usage. The deterministic pilot unit
+is one structured signal.
+
+For Phase 3, the adapter sends the same prompt and schema payload to the
+provider's `responses.input_tokens.count` endpoint before inference. It rejects a
+call unless the counted input plus the entire per-call output allowance fits.
+After completion, the preflight input count must exactly equal
+`response.usage.input_tokens`; actual input and output tokens are then committed.
+Any mismatch aborts the run. Conditions share identical hard caps but are not
+padded with dummy work, because adaptive compute reduction is itself H4.
+
+The protocol lock freezes four calls, 8,192 input tokens, 512 output tokens, and
+128 output tokens per call. Cached tokens remain part of provider-reported input
+usage rather than being silently removed from the compute comparison.
 
 ## Trace contract
 
@@ -84,6 +98,8 @@ Every result contains:
 - final candidate and confidence;
 - upstream provenance;
 - calls and input/output units;
+- usage unit (`signals` or `tokens`), provider response/model IDs, and request and
+  structured-output hashes;
 - activated modules and router reason;
 - final dynamic state;
 - fast, deliberate, and optional robust candidates;
