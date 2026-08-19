@@ -50,9 +50,10 @@ def run_experiment(
 
     # Metrics
     collector = MetricsCollector()
+    collector.collect(world)
 
     # Snapshots for visualization
-    snapshots = []
+    snapshots = [world.snapshot()]
 
     # Policy function wrapper
     def policy_fn(cell: Cell, obs: dict):
@@ -64,8 +65,11 @@ def run_experiment(
         world.run_step(policy_fn)
         record = collector.collect(world)
 
-        if step % snapshot_interval == 0:
+        if world.step_count % snapshot_interval == 0:
             snapshots.append(world.snapshot())
+
+    if snapshots[-1]["step"] != world.step_count:
+        snapshots.append(world.snapshot())
 
     elapsed = time.time() - start_time
 
@@ -76,12 +80,19 @@ def run_experiment(
         # Config
         config = {
             "policy": policy_name,
-            "seed": seed,
+            "random_seed": seed,
             "steps": steps,
             "cell_count": cell_count,
-            "world_w": world_w,
-            "world_h": world_h,
+            "world_size": [world_w, world_h],
             "snapshot_interval": snapshot_interval,
+            "parameters": {
+                "signal_dim": world.signal_dim,
+                "state_dim": world.state_dim,
+                "base_metabolism": 0.5,
+                "move_cost": 0.3,
+                "signal_cost": 0.2,
+                "resource_gain_limit": 5.0,
+            },
         }
         (output_dir / "config.json").write_text(json.dumps(config, indent=2))
 
@@ -94,6 +105,10 @@ def run_experiment(
         # Final state
         final_state = world.snapshot()
         (output_dir / "final_state.json").write_text(json.dumps(final_state, indent=2))
+
+        with open(output_dir / "events.jsonl", "w") as f:
+            for event in world.events:
+                f.write(json.dumps(event) + "\n")
 
         # Visualization
         render_html(

@@ -14,8 +14,8 @@ class RuleBasedPolicy(CellPolicy):
     
     Rules (in priority order):
     1. If energy < 20 and local_resource > 0.3: consume
-    2. If energy < 10: move toward highest-resource neighbor
-    3. If energy > 70 and neighbors exist: emit signal (aggregate neighbor signals)
+    2. If energy < 10: move toward the richest reachable adjacent position
+    3. If energy > 40 and neighbors exist: emit signal (aggregate neighbor signals)
     4. Otherwise: random movement or stay
     """
 
@@ -33,15 +33,14 @@ class RuleBasedPolicy(CellPolicy):
             return 5, None  # CONSUME
 
         # Rule 2: Move toward resource if very low energy
-        if energy < 10 and neighbors:
-            # Find neighbor with highest resource (approximate via position)
-            # Simple heuristic: move to random neighbor direction
-            dirs = [(0, -1, 1), (0, 1, 2), (1, 0, 3), (-1, 0, 4)]  # N, S, E, W
-            self.rng.shuffle(dirs)
-            return dirs[0][2], None
+        if energy < 10:
+            resources = observation["directional_resource"]
+            best_value = max(resources.values())
+            best_actions = [action for action, value in resources.items() if value == best_value]
+            return int(self.rng.choice(best_actions)), None
 
         # Rule 3: Emit aggregate signal if energy high
-        if energy > 70 and neighbors:
+        if energy > 40 and neighbors:
             avg_signal = np.mean([n["signal"] for n in neighbors], axis=0)
             # Add small noise
             noise = self.rng.standard_normal(self.signal_dim).astype(np.float32) * 0.1
@@ -53,7 +52,7 @@ class RuleBasedPolicy(CellPolicy):
 
         # Rule 4: Random movement or stay
         action = self.rng.choice([0, 1, 2, 3, 4], p=[0.2, 0.2, 0.2, 0.2, 0.2])
-        return action, None
+        return int(action), None
 
     def reset(self):
         pass

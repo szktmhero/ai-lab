@@ -78,6 +78,14 @@ def test_world_neighbors():
     print("PASS: test_world_neighbors")
 
 
+def test_toroidal_relative_position_is_local():
+    world = World(width=16, height=16, cell_count=2, seed=42)
+    world.cells[0].pos = Vec2(0, 0)
+    world.cells[1].pos = Vec2(15, 0)
+    observation = world.observe(world.cells[0])
+    assert observation["neighbors"][0]["relative_pos"] == [-1, 0]
+
+
 def test_world_observe():
     world = World(width=16, height=16, cell_count=5, seed=42)
     cell = world.cells[0]
@@ -148,9 +156,14 @@ def test_rule_based_policy():
 def test_rule_based_low_energy():
     policy = RuleBasedPolicy(seed=42)
     cell = Cell(id=0, pos=Vec2(5, 5), energy=5.0)
-    obs = {"self_state": np.zeros(14), "neighbors": [{"signal": np.zeros(SIGNAL_DIM)}], "local_resource": 0.1}
+    obs = {
+        "self_state": np.zeros(14),
+        "neighbors": [{"signal": np.zeros(SIGNAL_DIM)}],
+        "local_resource": 0.1,
+        "directional_resource": {1: 0.1, 2: 0.2, 3: 0.9, 4: 0.3},
+    }
     action, signal = policy.decide(cell, obs)
-    assert 1 <= action <= 4  # Should move
+    assert action == 3
     print("PASS: test_rule_based_low_energy")
 
 
@@ -164,6 +177,24 @@ def test_metrics_collector():
     assert record["largest_cluster_size"] >= 1
     assert record["number_of_clusters"] >= 1
     print("PASS: test_metrics_collector")
+
+
+def test_movement_does_not_overlap():
+    world = World(width=16, height=16, cell_count=2, seed=42)
+    world.cells[0].pos = Vec2(5, 5)
+    world.cells[1].pos = Vec2(6, 5)
+    world.apply_action(world.cells[0], Action.MOVE_E)
+    assert world.cells[0].pos == Vec2(5, 5)
+
+
+def test_resource_consumption_is_cumulative():
+    world = World(width=16, height=16, cell_count=1, seed=42)
+    cell = world.cells[0]
+    world.resource_field[cell.pos.y, cell.pos.x] = 5.0
+    world.apply_action(cell, Action.CONSUME)
+    record = MetricsCollector().collect(world)
+    assert record["resource_consumption"] == 5.0
+    assert record["resource_remaining"] > record["resource_consumption"]
 
 
 def test_simulation_loop():
@@ -215,6 +246,7 @@ if __name__ == "__main__":
     test_world_creation()
     test_world_wrap()
     test_world_neighbors()
+    test_toroidal_relative_position_is_local()
     test_world_observe()
     test_apply_action_consume()
     test_apply_action_move()
@@ -223,6 +255,8 @@ if __name__ == "__main__":
     test_rule_based_policy()
     test_rule_based_low_energy()
     test_metrics_collector()
+    test_movement_does_not_overlap()
+    test_resource_consumption_is_cumulative()
     test_simulation_loop()
     test_reproducibility()
     print("\nAll tests passed!")

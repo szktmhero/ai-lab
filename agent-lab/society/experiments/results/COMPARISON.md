@@ -2,24 +2,20 @@
 
 ## Metrics Summary
 
-| Policy | Avg Rounds | Avg Proposals | Winner Rate |
-|--------|-----------|---------------|-------------|
-| random | 21.2 | 99.9 | 1.00 |
-| simple | 17.0 | 37.3 | 1.00 |
+| Condition | Rounds | Proposals | Quality | Consensus | Comm. cost | Info spread |
+|-----------|--------|-----------|---------|-----------|------------|-------------|
+| independent | 5.0 | 128.0 | 0.793 | 0.008 | 640.0 | 0.173 |
+| full | 20.0 | 175.2 | 0.897 | 0.963 | 3113.1 | 0.330 |
+| local | 20.0 | 168.4 | 0.917 | 0.962 | 3391.2 | 0.320 |
 
-## Key Findings
+## Interpretation Boundaries
 
-- RandomPolicy: Baseline with completely random decisions
-- SimplePolicy: Rule-based with proposal/support/info-sharing logic
+**DESIGNED:** communication limits, action costs, sparse/full/absent networks, trust updates, and the decision score.
 
-## Emergent Behaviors Observed
+**OBSERVED:** the table reports direct measurements only.
 
-- Role specialization (proposers vs supporters)
-- Trust network formation
-- Information asymmetry effects
+**INFERRED:** none automatically. Differences between conditions require seed-level statistical analysis.
 
-## Next Steps
+**SPECULATIVE:** leadership, coalitions, specialization, authority, and institutions are not established by this run.
 
-- Add reputation-based trust dynamics
-- Implement coalition detection
-- Add LLM-based policy for comparison
+`decision_quality` is normalized latent option quality in this synthetic task model; `evidence_coverage` is reported separately.

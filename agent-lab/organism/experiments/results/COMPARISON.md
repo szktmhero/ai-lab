@@ -4,27 +4,41 @@
 
 | Metric | Mean | Std | Min | Max |
 |--------|------|-----|-----|-----|
-| Survival Rate | 0.300 | 0.458 | 0.000 | 1.000 |
-| Avg Energy (final) | 21.918 | 35.076 | 0.000 | 99.200 |
-| Largest Cluster | 0.300 | 0.458 | 0.000 | 1.000 |
+| Final Survivors | 0.200 | 0.400 | 0.000 | 1.000 |
+| Avg Energy (final) | 4.594 | 9.207 | 0.000 | 24.321 |
+| Largest Cluster | 0.200 | 0.400 | 0.000 | 1.000 |
 | Signal Diversity | 0.000 | 0.000 | 0.000 | 0.000 |
 | Spatial Entropy | 0.000 | 0.000 | 0.000 | 0.000 |
-| Elapsed (s) | 4.408 | 0.252 | 4.040 | 4.860 |
+| Resource Consumed | 7154.414 | 770.851 | 6124.770 | 8842.631 |
+| Survivors / 1000 Resource | 0.026 | 0.053 | 0.000 | 0.139 |
+| Elapsed (s) | 4.056 | 0.136 | 3.820 | 4.220 |
 
 ## Rule_based Policy
 
 | Metric | Mean | Std | Min | Max |
 |--------|------|-----|-----|-----|
-| Survival Rate | 39.400 | 3.412 | 34.000 | 46.000 |
-| Avg Energy (final) | 21.218 | 0.510 | 20.331 | 21.724 |
-| Largest Cluster | 2.300 | 0.458 | 2.000 | 3.000 |
-| Signal Diversity | 1.026 | 0.002 | 1.022 | 1.030 |
-| Spatial Entropy | 4.763 | 0.104 | 4.615 | 4.985 |
-| Elapsed (s) | 13.078 | 0.839 | 11.810 | 14.400 |
+| Final Survivors | 46.300 | 2.492 | 43.000 | 50.000 |
+| Avg Energy (final) | 20.890 | 0.444 | 20.233 | 21.896 |
+| Largest Cluster | 2.800 | 1.166 | 2.000 | 6.000 |
+| Signal Diversity | 0.993 | 0.006 | 0.986 | 1.003 |
+| Spatial Entropy | 4.961 | 0.106 | 4.772 | 5.124 |
+| Resource Consumed | 38168.636 | 1372.984 | 35697.377 | 40251.824 |
+| Survivors / 1000 Resource | 1.212 | 0.027 | 1.168 | 1.271 |
+| Elapsed (s) | 10.991 | 0.411 | 10.340 | 11.680 |
 
 ## Cross-Policy Comparison
 
 | Metric | Random | Rule_based |
 |--------|---|--|
-| Survival Rate | 0.30 ± 0.46 | 39.40 ± 3.41 |
-| Avg Time (s) | 4.41 ± 0.25 | 13.08 ± 0.84 |
+| Final Survivors | 0.20 ± 0.40 | 46.30 ± 2.49 |
+| Avg Time (s) | 4.06 ± 0.14 | 10.99 ± 0.41 |
+
+## Interpretation Boundaries
+
+**DESIGNED:** metabolism, resource regeneration, action costs, collision handling, and each policy's action rules.
+
+**OBSERVED:** the tables contain final-step measurements over ten matched seeds.
+
+**INFERRED:** the consume-and-search rule improves survival under this resource model. This does not establish intelligence or self-organization.
+
+**SPECULATIVE:** signal semantics, role differentiation, and organism-like behavior are not demonstrated by these metrics.

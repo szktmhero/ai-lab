@@ -58,6 +58,7 @@ class Action:
     content: Optional[str] = None
     change_description: Optional[str] = None
     merge_target: Optional[int] = None
+    option_id: Optional[int] = None
 
     def to_dict(self) -> dict:
         return {
@@ -71,6 +72,7 @@ class Action:
             "content": self.content,
             "change_description": self.change_description,
             "merge_target": self.merge_target,
+            "option_id": self.option_id,
         }
 
 
@@ -82,6 +84,9 @@ class Information:
     accuracy: float  # 0.0 - 1.0
     source_agent: int
     round_created: int
+    correct: bool = True
+    option_id: int = 0
+    value: float = 0.0
 
     def to_dict(self) -> dict:
         return {
@@ -91,6 +96,21 @@ class Information:
             "accuracy": self.accuracy,
             "source_agent": self.source_agent,
             "round_created": self.round_created,
+            "correct": self.correct,
+            "option_id": self.option_id,
+            "value": self.value,
+        }
+
+    def public_dict(self) -> dict:
+        """Information visible to agents; reliability is intentionally hidden."""
+        return {
+            "id": self.id,
+            "content": self.content,
+            "category": self.category,
+            "source_agent": self.source_agent,
+            "round_created": self.round_created,
+            "option_id": self.option_id,
+            "value": self.value,
         }
 
 
@@ -108,6 +128,10 @@ class ProposalState:
     alive: bool = True
     created_round: int = 0
     support_history: List[List[int]] = field(default_factory=list)
+    mutation_history: List[dict] = field(default_factory=list)
+    modifiers: List[int] = field(default_factory=list)
+    support_confidence: Dict[int, float] = field(default_factory=dict)
+    option_id: Optional[int] = None
 
     def to_dict(self) -> dict:
         return {
@@ -122,4 +146,9 @@ class ProposalState:
             "opposers": self.opposers,
             "alive": self.alive,
             "created_round": self.created_round,
+            "support_history": self.support_history,
+            "mutation_history": self.mutation_history,
+            "modifiers": self.modifiers,
+            "support_confidence": self.support_confidence,
+            "option_id": self.option_id,
         }

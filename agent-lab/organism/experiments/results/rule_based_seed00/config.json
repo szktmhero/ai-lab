@@ -1,9 +1,19 @@
 {
   "policy": "rule_based",
-  "seed": 0,
+  "random_seed": 0,
   "steps": 1000,
   "cell_count": 128,
-  "world_w": 32,
-  "world_h": 32,
-  "snapshot_interval": 10
+  "world_size": [
+    32,
+    32
+  ],
+  "snapshot_interval": 10,
+  "parameters": {
+    "signal_dim": 16,
+    "state_dim": 12,
+    "base_metabolism": 0.5,
+    "move_cost": 0.3,
+    "signal_cost": 0.2,
+    "resource_gain_limit": 5.0
+  }
 }

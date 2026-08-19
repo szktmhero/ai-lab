@@ -41,44 +41,54 @@ def run_simulation(
         observer = Observer()
 
     society.start_task(task)
+    previous_support = None
+    stable_rounds = 0
 
     for round_num in range(max_rounds):
         society.round_count = round_num
         round_events = []
+        decisions = []
 
-        # Build observation for each agent
+        # All decisions use the same start-of-round state, avoiding ID-order bias.
         for agent in society.get_all_alive_agents():
             observation = _build_observation(agent, society, round_num)
-
-            # Get action from policy
             action = policy.decide(agent, observation)
-
             if action is not None:
                 action.round = round_num
-                event = society.apply_action(agent, action)
-                if event:
-                    event["task"] = task["id"]
-                    observer.record_event(event)
-                    round_events.append(event)
+                decisions.append((agent, action))
+
+        society.rng.shuffle(decisions)
+        for agent, action in decisions:
+            event = society.apply_action(agent, action)
+            if event:
+                event["task"] = task["id"]
+                observer.record_event(event)
+                round_events.append(event)
 
         # Record round summary
         round_summary = observer.record_round(society, round_num)
 
-        # Check termination: enough proposals with sufficient support?
-        alive_proposals = [p for p in society.proposals.values() if p.alive and p.support_count > 5]
-        if len(alive_proposals) >= 3 and round_num > 10:
-            # Check convergence: support not changing much
-            if round_num > 15:
-                break
-
         if on_round_end:
             on_round_end(round_num, society, round_summary)
+
+        support = tuple(
+            sorted((p.id, p.support_count, p.oppose_count)
+                   for p in society.proposals.values() if p.alive)
+        )
+        stable_rounds = stable_rounds + 1 if support == previous_support else 0
+        previous_support = support
+        if round_num >= 4 and stable_rounds >= 3 and any(count > 0 for _, count, _ in support):
+            break
 
     # Decide winner
     if decision_mode == "emergent":
         winner = society.decide()
-    else:
+    elif decision_mode == "majority":
         winner = society.majority_vote()
+    else:
+        raise ValueError(f"Unknown decision mode: {decision_mode}")
+
+    society.settle_task(winner)
 
     # Record task end
     task_summary = observer.record_task_end(society, task["id"], winner)
@@ -87,6 +97,7 @@ def run_simulation(
         "winner": winner,
         "rounds": society.round_count + 1,
         "proposals": len(society.proposals),
+        "majority_winner": society.majority_vote(),
         "task_summary": task_summary,
     }
 
@@ -100,12 +111,16 @@ def _build_observation(agent, society: Society, round_num: int) -> dict:
             # Agent knows about proposals they support/oppose or from known agents
             if (agent.id in proposal.supporters or
                 agent.id in proposal.opposers or
-                proposal.creator in agent.known_agents):
+                proposal.creator in agent.known_agents or
+                any(supporter in agent.known_agents for supporter in proposal.supporters)):
                 known_proposals[pid] = proposal.to_dict()
 
     # Known information
     known_info = [
-        society.information_pool[info_id].to_dict()
+        {
+            **society.information_pool[info_id].public_dict(),
+            "source_agent": agent.information_sources.get(info_id, -1),
+        }
         for info_id in agent.known_information
         if info_id in society.information_pool
     ]
@@ -116,8 +131,11 @@ def _build_observation(agent, society: Society, round_num: int) -> dict:
         "information": known_info,
         "information_ids": agent.known_information,
         "known_agents": list(agent.known_agents),
+        "all_agent_ids": list(society.agents),
+        "network_mode": society.network_mode,
         "trust": agent.trust,
         "budget_remaining": agent.energy,
+        "options": society.current_task.get("options", []),
     }
 
 

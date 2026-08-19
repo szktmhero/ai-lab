@@ -47,6 +47,8 @@ class Renderer:
                         edges.append({
                             "source": int(agent_id),
                             "target": int(known_id),
+                            "trust": agent_data.get("trust", {}).get(str(known_id),
+                                      agent_data.get("trust", {}).get(known_id, 0.5)),
                         })
 
         # Build proposal data
@@ -105,9 +107,9 @@ class Renderer:
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draw edges
-            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-            ctx.lineWidth = 0.5;
             for (const edge of edges) {{
+                ctx.strokeStyle = `rgba(255,255,255,${{0.05 + edge.trust * 0.3}})`;
+                ctx.lineWidth = 0.5 + edge.trust * 2;
                 const sx = positions[edge.source][0] * canvas.width;
                 const sy = positions[edge.source][1] * canvas.height;
                 const tx = positions[edge.target][0] * canvas.width;
@@ -122,7 +124,8 @@ class Renderer:
             for (const [id, pos] of Object.entries(positions)) {{
                 const x = pos[0] * canvas.width;
                 const y = pos[1] * canvas.height;
-                const r = 3;
+                const degree = edges.filter(e => e.source == id || e.target == id).length;
+                const r = 3 + Math.sqrt(degree) * 0.7;
                 ctx.beginPath();
                 ctx.arc(x, y, r, 0, Math.PI * 2);
                 ctx.fillStyle = '#e94560';
@@ -154,21 +157,21 @@ class Renderer:
         filename: str = "timeline.html",
     ) -> Path:
         """Render event timeline visualization."""
-        # Group events by round
+        # Keep task boundaries; round numbers restart for every task.
         rounds = {}
         for event in events:
-            r = event.get("round", 0)
-            if r not in rounds:
-                rounds[r] = []
-            rounds[r].append(event)
+            key = (event.get("task", 0), event.get("round", 0))
+            if key not in rounds:
+                rounds[key] = []
+            rounds[key].append(event)
 
         timeline_data = []
-        for r in sorted(rounds.keys()):
+        for task_id, round_id in sorted(rounds.keys()):
             type_counts = {}
-            for e in rounds[r]:
+            for e in rounds[(task_id, round_id)]:
                 t = e.get("type", "unknown")
                 type_counts[t] = type_counts.get(t, 0) + 1
-            timeline_data.append({"round": r, "counts": type_counts})
+            timeline_data.append({"task": task_id, "round": round_id, "counts": type_counts})
 
         html = f"""<!DOCTYPE html>
 <html>
@@ -198,7 +201,7 @@ class Renderer:
         for (const round of data) {{
             const div = document.createElement('div');
             div.className = 'round';
-            div.innerHTML = `<span class="round-num">${{round.round}}</span>`;
+            div.innerHTML = `<span class="round-num" title="Task ${{round.task}}">${{round.task}}:${{round.round}}</span>`;
 
             for (const t of types) {{
                 const count = round.counts[t] || 0;
@@ -250,7 +253,7 @@ class Renderer:
         function draw() {{
             ctx.clearRect(0, 0, 800, 300);
             const maxProposals = Math.max(...data.map(d => d.alive_proposals), 1);
-            const maxTrust = Math.max(...data.map(d => d.avg_trust), 1);
+            const maxTrust = Math.max(...data.map(d => d.average_trust), 1);
 
             // Draw proposals line
             ctx.strokeStyle = '#e94560';
@@ -269,7 +272,7 @@ class Renderer:
             ctx.beginPath();
             for (let i = 0; i < data.length; i++) {{
                 const x = (i / (data.length - 1)) * 780 + 10;
-                const y = 290 - (data[i].avg_trust / maxTrust) * 270;
+                const y = 290 - (data[i].average_trust / maxTrust) * 270;
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }}
@@ -279,6 +282,57 @@ class Renderer:
     </script>
 </body>
 </html>"""
+        path = self.output_dir / filename
+        path.write_text(html)
+        return path
+
+    def render_proposals(
+        self,
+        society_snapshot: dict,
+        events: Optional[List[dict]] = None,
+        task_summaries: Optional[List[dict]] = None,
+        filename: str = "proposals.html",
+    ) -> Path:
+        """Render proposal birth, mutation, merge, death, and adoption state."""
+        proposals = list(society_snapshot.get("proposals", {}).values())
+        rows = []
+        for proposal in sorted(proposals, key=lambda item: item["id"]):
+            lineage = f"parent={proposal.get('parent')} merged={proposal.get('merged_from', [])}"
+            rows.append(
+                "<tr>"
+                f"<td>{proposal['id']}</td><td>{proposal.get('created_round', 0)}</td>"
+                f"<td>{proposal.get('option_id')}</td><td>{proposal.get('creator')}</td>"
+                f"<td>{lineage}</td><td>{proposal.get('support_count', 0)}</td>"
+                f"<td>{'alive' if proposal.get('alive', True) else 'dead'}</td>"
+                "</tr>"
+            )
+        history_rows = []
+        for event in events or []:
+            if event.get("type") in {"propose", "modify", "merge"}:
+                history_rows.append(
+                    "<tr>"
+                    f"<td>{event.get('task')}</td><td>{event.get('round')}</td>"
+                    f"<td>{event.get('type')}</td><td>{event.get('proposal_id', event.get('proposal_a'))}</td>"
+                    f"<td>{event.get('new_proposal_id', '')}</td>"
+                    "</tr>"
+                )
+        for summary in task_summaries or []:
+            history_rows.append(
+                f"<tr><td>{summary['task']}</td><td>{summary['decision_time']}</td>"
+                f"<td>adopt</td><td>{summary['winner']}</td><td></td></tr>"
+            )
+
+        html = """<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>Proposal Evolution</title><style>
+body { background:#1a1a2e; color:#eee; font-family:monospace; padding:20px; }
+table { border-collapse:collapse; width:100%; } th,td { border:1px solid #405070; padding:7px; }
+th { background:#0f3460; } tr:nth-child(even) { background:#16213e; }
+</style></head><body><h2>Proposal Evolution: Final Task State</h2>
+<table><thead><tr><th>ID</th><th>Birth</th><th>Option</th><th>Creator</th>
+<th>Lineage</th><th>Support</th><th>State</th></tr></thead><tbody>""" + "".join(rows) + \
+            "</tbody></table><h2>All Task Events</h2><table><thead><tr><th>Task</th>" \
+            "<th>Round</th><th>Event</th><th>Source proposal</th><th>New proposal</th>" \
+            "</tr></thead><tbody>" + "".join(history_rows) + "</tbody></table></body></html>"
         path = self.output_dir / filename
         path.write_text(html)
         return path

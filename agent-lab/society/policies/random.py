@@ -34,6 +34,8 @@ class RandomPolicy(AgentPolicy):
 
         # Build action
         known = list(agent.known_agents)
+        all_agent_ids = observation.get("all_agent_ids", [])
+        unknown = [aid for aid in all_agent_ids if aid != agent.id and aid not in agent.known_agents]
         alive_proposals = [
             p for p in observation.get("proposals", {}).values()
             if p.get("alive", True)
@@ -52,12 +54,28 @@ class RandomPolicy(AgentPolicy):
                 action.proposal_id = p["id"]
                 action.confidence = float(self.rng.uniform(0.3, 0.9))
 
-        if action_type in (ActionType.SHARE_INFORMATION, ActionType.REQUEST_INFORMATION, ActionType.CONTACT, ActionType.FOLLOW):
+        if action_type in (ActionType.SHARE_INFORMATION, ActionType.REQUEST_INFORMATION, ActionType.FOLLOW):
             if known:
                 action.target_id = int(self.rng.choice(known))
 
+        if action_type == ActionType.CONTACT and unknown:
+            action.target_id = int(self.rng.choice(unknown))
+
+        if action_type == ActionType.UNFOLLOW and known:
+            action.target_id = int(self.rng.choice(known))
+
+        if action_type == ActionType.SHARE_INFORMATION:
+            info_ids = observation.get("information_ids", [])
+            if info_ids:
+                action.information_id = str(self.rng.choice(info_ids))
+
         if action_type == ActionType.PROPOSE:
-            action.content = f"Proposal_{agent.id}_{observation.get('round', 0)}"
+            options = observation.get("options", [])
+            if options:
+                action.option_id = int(self.rng.integers(0, len(options)))
+                action.content = options[action.option_id]
+            else:
+                action.content = f"Proposal_{agent.id}_{observation.get('round', 0)}"
 
         if action_type == ActionType.MODIFY:
             action.change_description = f"Modified by agent {agent.id}"

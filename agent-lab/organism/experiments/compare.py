@@ -35,17 +35,21 @@ def compare_policies(results_dir: Path) -> str:
         cluster_vals = [r["largest_cluster_size"]["final"] if isinstance(r["largest_cluster_size"], dict) else r.get("largest_cluster_size", 0) for r in runs]
         signal_vals = [r["signal_diversity"]["final"] if isinstance(r["signal_diversity"], dict) else r.get("signal_diversity", 0) for r in runs]
         entropy_vals = [r["spatial_entropy"]["final"] if isinstance(r["spatial_entropy"], dict) else r.get("spatial_entropy", 0) for r in runs]
+        consumption_vals = [r["resource_consumption"]["final"] for r in runs]
+        efficiency_vals = [1000 * alive / max(consumed, 1e-12) for alive, consumed in zip(alive_vals, consumption_vals)]
         elapsed_vals = [r["elapsed_seconds"] for r in runs]
 
         lines.append(f"| Metric | Mean | Std | Min | Max |")
         lines.append(f"|--------|------|-----|-----|-----|")
 
         for name, vals in [
-            ("Survival Rate", alive_vals),
+            ("Final Survivors", alive_vals),
             ("Avg Energy (final)", energy_vals),
             ("Largest Cluster", cluster_vals),
             ("Signal Diversity", signal_vals),
             ("Spatial Entropy", entropy_vals),
+            ("Resource Consumed", consumption_vals),
+            ("Survivors / 1000 Resource", efficiency_vals),
             ("Elapsed (s)", elapsed_vals),
         ]:
             arr = np.array(vals, dtype=float)
@@ -59,15 +63,9 @@ def compare_policies(results_dir: Path) -> str:
         lines.append("| Metric | " + " | ".join(p.capitalize() for p in policies) + " |")
         lines.append("|--------|-" + "-|-".join("-" for _ in policies) + "|")
 
-        for metric_key, label in [
-            ("final_alive", "Survival Rate"),
-            ("final_alive", "Survival Rate"),
-        ]:
-            pass
-
         # Simple survival comparison
         for metric_key, label in [
-            ("final_alive", "Survival Rate"),
+            ("final_alive", "Final Survivors"),
             ("elapsed_seconds", "Avg Time (s)"),
         ]:
             row = f"| {label} |"
@@ -83,6 +81,22 @@ def compare_policies(results_dir: Path) -> str:
                     vals = [float(r.get(metric_key, 0)) for r in runs]
                 row += f" {np.mean(vals):.2f} ± {np.std(vals):.2f} |"
             lines.append(row)
+
+    lines.extend([
+        "",
+        "## Interpretation Boundaries",
+        "",
+        "**DESIGNED:** metabolism, resource regeneration, action costs, collision handling, "
+        "and each policy's action rules.",
+        "",
+        "**OBSERVED:** the tables contain final-step measurements over ten matched seeds.",
+        "",
+        "**INFERRED:** the consume-and-search rule improves survival under this resource model. "
+        "This does not establish intelligence or self-organization.",
+        "",
+        "**SPECULATIVE:** signal semantics, role differentiation, and organism-like behavior "
+        "are not demonstrated by these metrics.",
+    ])
 
     report = "\n".join(lines)
     return report

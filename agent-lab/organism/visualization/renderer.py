@@ -74,7 +74,7 @@ def render_html(
 <script>
 const SNAPSHOTS = {snapshots_json};
 const METRICS = {metrics_json};
-const RESOURCE = {resource_json};
+const FALLBACK_RESOURCE = {resource_json};
 const W = {world_w};
 const H = {world_h};
 const CELL_SIZE = 16;
@@ -86,10 +86,10 @@ let timer = null;
 const canvas = document.getElementById('world');
 const ctx = canvas.getContext('2d');
 
-function drawResource() {{
+function drawResource(resource) {{
   for (let y = 0; y < H; y++) {{
     for (let x = 0; x < W; x++) {{
-      const val = RESOURCE[y][x] / 10.0;
+      const val = resource[y][x] / 10.0;
       const r = Math.floor(20 + val * 30);
       const g = Math.floor(40 + val * 60);
       const b = Math.floor(20 + val * 30);
@@ -115,9 +115,9 @@ function signalColor(signal) {{
 }}
 
 function draw() {{
-  drawResource();
   const snap = SNAPSHOTS[currentStep];
   if (!snap) return;
+  drawResource(snap.resource_field || FALLBACK_RESOURCE);
 
   const cells = Object.values(snap.cells);
   for (const c of cells) {{
@@ -142,7 +142,8 @@ function draw() {{
 }}
 
 function updateMetrics() {{
-  const m = METRICS[currentStep];
+  const snap = SNAPSHOTS[currentStep];
+  const m = METRICS.find(item => item.step === snap.step) || METRICS[METRICS.length - 1];
   if (!m) return;
   document.getElementById('m-alive').textContent = m.alive_cells;
   document.getElementById('m-energy').textContent = m.average_energy.toFixed(2);
@@ -152,7 +153,7 @@ function updateMetrics() {{
   document.getElementById('m-signal').textContent = m.signal_diversity.toFixed(3);
   document.getElementById('m-entropy').textContent = m.spatial_entropy.toFixed(3);
   document.getElementById('m-resource').textContent = m.resource_consumption.toFixed(1);
-  document.getElementById('step-display').textContent = `Step: ${{currentStep}} / ${{SNAPSHOTS.length - 1}}`;
+  document.getElementById('step-display').textContent = `Step: ${{snap.step}} / ${{SNAPSHOTS[SNAPSHOTS.length - 1].step}}`;
 }}
 
 function drawChart() {{
@@ -180,7 +181,7 @@ function drawChart() {{
   }}
 
   // Current step indicator
-  const x = (currentStep / (METRICS.length - 1)) * 800;
+  const x = (SNAPSHOTS[currentStep].step / Math.max(METRICS.length, 1)) * 800;
   cctx.beginPath();
   cctx.strokeStyle = '#fff';
   cctx.lineWidth = 1;

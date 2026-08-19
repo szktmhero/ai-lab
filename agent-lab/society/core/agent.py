@@ -37,6 +37,7 @@ class Agent:
 
     # Task-specific info
     known_information: List[str] = field(default_factory=list)
+    information_sources: Dict[str, int] = field(default_factory=dict)
 
     def initialize_social(self, all_agent_ids: List[int], rng: np.random.Generator, avg_degree: int = 6):
         """Initialize random social connections."""
@@ -48,7 +49,7 @@ class Agent:
         connections = rng.choice(others, size=min(n_connections, len(others)), replace=False)
         for aid in connections:
             self.known_agents.add(int(aid))
-            self.trust[int(aid)] = float(rng.uniform(0.3, 0.7))
+            self.trust[int(aid)] = float(rng.uniform(0.1, 0.4))
 
     def to_dict(self) -> dict:
         return {
@@ -65,6 +66,10 @@ class Agent:
             "current_support": self.current_support,
             "current_proposal": self.current_proposal,
             "has_proposed": self.has_proposed,
+            "history": self.history,
+            "memory": self.memory,
+            "known_information": self.known_information,
+            "information_sources": self.information_sources,
         }
 
     @classmethod
@@ -82,4 +87,10 @@ class Agent:
         agent.current_support = d.get("current_support")
         agent.current_proposal = d.get("current_proposal")
         agent.has_proposed = d.get("has_proposed", False)
+        agent.history = d.get("history", [])
+        agent.memory = d.get("memory", [])
+        agent.known_information = d.get("known_information", [])
+        agent.information_sources = {
+            str(k): int(v) for k, v in d.get("information_sources", {}).items()
+        }
         return agent

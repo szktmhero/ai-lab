@@ -1,16 +1,44 @@
 {
-  "random": {
-    "avg_rounds": 21.2,
-    "avg_proposals": 99.86666666666666,
-    "total_tasks_with_winner": 15,
-    "total_tasks": 15,
-    "winner_rate": 1.0
+  "independent": {
+    "avg_rounds": 5.0,
+    "avg_proposals": 128.0,
+    "total_tasks_with_winner": 150,
+    "total_tasks": 150,
+    "winner_rate": 1.0,
+    "avg_consensus": 0.0078125,
+    "avg_communication_cost": 640.0,
+    "avg_information_spread": 0.17288803068097014,
+    "avg_trust": 0.0,
+    "avg_network_density": 0.0,
+    "avg_decision_quality": 0.7925288594859944,
+    "majority_agreement": 1.0
   },
-  "simple": {
-    "avg_rounds": 17.0,
-    "avg_proposals": 37.333333333333336,
-    "total_tasks_with_winner": 15,
-    "total_tasks": 15,
-    "winner_rate": 1.0
+  "full": {
+    "avg_rounds": 20.0,
+    "avg_proposals": 175.16666666666666,
+    "total_tasks_with_winner": 150,
+    "total_tasks": 150,
+    "winner_rate": 1.0,
+    "avg_consensus": 0.9628645833333334,
+    "avg_communication_cost": 3113.1066666666666,
+    "avg_information_spread": 0.33040038791176074,
+    "avg_trust": 0.24098602182798753,
+    "avg_network_density": 1.0,
+    "avg_decision_quality": 0.896760948127137,
+    "majority_agreement": 1.0
+  },
+  "local": {
+    "avg_rounds": 20.0,
+    "avg_proposals": 168.37333333333333,
+    "total_tasks_with_winner": 150,
+    "total_tasks": 150,
+    "winner_rate": 1.0,
+    "avg_consensus": 0.961875,
+    "avg_communication_cost": 3391.1866666666665,
+    "avg_information_spread": 0.3198202741530835,
+    "avg_trust": 0.25145052000410734,
+    "avg_network_density": 0.16141404199475065,
+    "avg_decision_quality": 0.9168314009998115,
+    "majority_agreement": 1.0
   }
 }

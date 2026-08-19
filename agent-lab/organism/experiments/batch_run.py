@@ -7,6 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from organism.experiments.run import run_experiment
+from organism.experiments.compare import compare_policies
 
 
 def main():
@@ -40,6 +41,7 @@ def main():
     # Save summary
     summary_path = output_base / "summary.json"
     summary_path.write_text(json.dumps(all_results, indent=2))
+    (output_base / "COMPARISON.md").write_text(compare_policies(output_base))
     print(f"\nAll experiments complete. Summary: {summary_path}")
 
 

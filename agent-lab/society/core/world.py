@@ -25,11 +25,17 @@ class Society:
         seed: int = 42,
         avg_degree: int = 6,
         budget: float = INITIAL_BUDGET,
+        network_mode: str = "local",
+        action_costs: Optional[Dict[ActionType, float]] = None,
     ):
         self.agent_count = agent_count
         self.seed = seed
         self.avg_degree = avg_degree
         self.budget = budget
+        if network_mode not in {"independent", "full", "local"}:
+            raise ValueError(f"Unknown network mode: {network_mode}")
+        self.network_mode = network_mode
+        self.action_costs = dict(ACTION_COSTS if action_costs is None else action_costs)
 
         self.rng = np.random.default_rng(seed)
         self.round_count = 0
@@ -56,14 +62,24 @@ class Society:
     def _init_agents(self):
         """Create and initialize agents."""
         for i in range(self.agent_count):
-            agent = Agent(id=i)
-            agent.initialize_social(
-                list(range(self.agent_count)),
-                self.rng,
-                self.avg_degree,
+            agent = Agent(
+                id=i,
+                preferences=(self.rng.standard_normal(PREFERENCE_DIM) * 0.3).astype(np.float32),
+                beliefs=(self.rng.standard_normal(BELIEF_DIM) * 0.3).astype(np.float32),
+                confidence=float(self.rng.uniform(0.2, 0.8)),
+                risk_tolerance=float(self.rng.random()),
+                novelty_preference=float(self.rng.random()),
+                communication_tendency=float(self.rng.random()),
             )
+            if self.network_mode == "local":
+                agent.initialize_social(list(range(self.agent_count)), self.rng, self.avg_degree)
+            elif self.network_mode == "full":
+                agent.known_agents = set(range(self.agent_count)) - {i}
+                agent.trust = {
+                    aid: float(self.rng.uniform(0.1, 0.4)) for aid in agent.known_agents
+                }
             # Random initial energy variance
-            agent.energy = self.budget * self.rng.uniform(0.8, 1.0)
+            agent.energy = self.budget
             self.agents[i] = agent
 
     def get_known_agents(self, agent: Agent) -> List[Agent]:
@@ -83,13 +99,14 @@ class Society:
 
     def apply_action(self, agent: Agent, action: Action) -> Optional[dict]:
         """Apply an agent's action and return event dict."""
-        cost = ACTION_COSTS.get(action.action_type, 0)
+        if action.agent_id != agent.id:
+            return None
+        cost = self.action_costs.get(action.action_type, 0)
 
         # Check budget
         if agent.energy < cost:
             return None
 
-        agent.energy -= cost
         event = None
 
         if action.action_type == ActionType.PROPOSE:
@@ -115,7 +132,9 @@ class Society:
         elif action.action_type == ActionType.WAIT:
             event = {"type": "wait", "agent": agent.id, "round": self.round_count}
 
-        if event:
+        if event and not event["type"].endswith("_failed"):
+            agent.energy -= cost
+            agent.history.append({**event, "round": self.round_count})
             event["round"] = self.round_count
             event["agent"] = agent.id
             self.events.append(event)
@@ -129,11 +148,14 @@ class Society:
             content=action.content or f"Proposal from agent {agent.id}",
             creator=agent.id,
             created_round=self.round_count,
+            option_id=action.option_id,
         )
         proposal.supporters.append(agent.id)
         proposal.support_count = 1
+        proposal.support_confidence[agent.id] = action.confidence
         self.proposals[self.next_proposal_id] = proposal
         agent.current_proposal = self.next_proposal_id
+        agent.current_support = self.next_proposal_id
         agent.has_proposed = True
         self.next_proposal_id += 1
         return {"type": "propose", "proposal_id": proposal.id, "content": proposal.content}
@@ -145,6 +167,14 @@ class Society:
             return {"type": "support_failed", "reason": "invalid_proposal"}
 
         proposal = self.proposals[pid]
+        if not proposal.alive:
+            return {"type": "support_failed", "reason": "inactive_proposal"}
+        if agent.current_support is not None and agent.current_support != pid:
+            previous = self.proposals.get(agent.current_support)
+            if previous and agent.id in previous.supporters:
+                previous.supporters.remove(agent.id)
+                previous.support_count -= 1
+                previous.support_confidence.pop(agent.id, None)
         # Remove from opposing if was opposing
         if agent.id in proposal.opposers:
             proposal.opposers.remove(agent.id)
@@ -153,6 +183,7 @@ class Society:
         if agent.id not in proposal.supporters:
             proposal.supporters.append(agent.id)
             proposal.support_count += 1
+        proposal.support_confidence[agent.id] = action.confidence
 
         agent.current_support = pid
         return {"type": "support", "proposal_id": pid, "confidence": action.confidence}
@@ -168,6 +199,9 @@ class Society:
         if agent.id in proposal.supporters:
             proposal.supporters.remove(agent.id)
             proposal.support_count -= 1
+            proposal.support_confidence.pop(agent.id, None)
+            if agent.current_support == pid:
+                agent.current_support = None
 
         if agent.id not in proposal.opposers:
             proposal.opposers.append(agent.id)
@@ -181,12 +215,35 @@ class Society:
         if pid is None or pid not in self.proposals:
             return {"type": "modify_failed", "reason": "invalid_proposal"}
 
-        proposal = self.proposals[pid]
-        old_content = proposal.content
-        proposal.content = action.change_description or proposal.content + " (modified)"
-        proposal.parent = pid
-
-        return {"type": "modify", "proposal_id": pid, "old": old_content, "new": proposal.content}
+        parent = self.proposals[pid]
+        if not parent.alive:
+            return {"type": "modify_failed", "reason": "inactive_proposal"}
+        child_id = self.next_proposal_id
+        content = action.change_description or parent.content + " (modified)"
+        child = ProposalState(
+            id=child_id,
+            content=content,
+            creator=parent.creator,
+            parent=pid,
+            created_round=self.round_count,
+            supporters=[agent.id],
+            support_count=1,
+            modifiers=parent.modifiers + [agent.id],
+            mutation_history=parent.mutation_history + [{
+                "round": self.round_count, "modifier": agent.id, "from": pid,
+            }],
+            support_confidence={agent.id: action.confidence},
+            option_id=action.option_id if action.option_id is not None else parent.option_id,
+        )
+        if agent.id in parent.supporters:
+            parent.supporters.remove(agent.id)
+            parent.support_count -= 1
+            parent.support_confidence.pop(agent.id, None)
+        self.proposals[child_id] = child
+        self.next_proposal_id += 1
+        agent.current_support = child_id
+        return {"type": "modify", "proposal_id": pid, "new_proposal_id": child_id,
+                "old": parent.content, "new": content}
 
     def _handle_merge(self, agent: Agent, action: Action) -> dict:
         """Handle proposal merge."""
@@ -197,41 +254,63 @@ class Society:
         if pid not in self.proposals or merge_target not in self.proposals:
             return {"type": "merge_failed", "reason": "invalid_proposal"}
 
+        if pid == merge_target:
+            return {"type": "merge_failed", "reason": "same_proposal"}
         p1 = self.proposals[pid]
         p2 = self.proposals[merge_target]
-
-        # Merge: keep the higher-support proposal, add the other as parent
-        if p1.support_count >= p2.support_count:
-            p1.merged_from.append(merge_target)
-            p1.content = f"[Merged] {p1.content} + {p2.content}"
-            p2.alive = False
-        else:
-            p2.merged_from.append(pid)
-            p2.content = f"[Merged] {p2.content} + {p1.content}"
-            p1.alive = False
-
-        return {"type": "merge", "proposal_a": pid, "proposal_b": merge_target}
+        if not p1.alive or not p2.alive:
+            return {"type": "merge_failed", "reason": "inactive_proposal"}
+        merged_id = self.next_proposal_id
+        supporters = sorted(set(p1.supporters) | set(p2.supporters) | {agent.id})
+        merged = ProposalState(
+            id=merged_id,
+            content=f"[Merged] {p1.content} + {p2.content}",
+            creator=agent.id,
+            merged_from=[pid, merge_target],
+            supporters=supporters,
+            support_count=len(supporters),
+            created_round=self.round_count,
+            modifiers=[agent.id],
+            support_confidence={sid: max(
+                p1.support_confidence.get(sid, 0.5), p2.support_confidence.get(sid, 0.5)
+            ) for sid in supporters},
+            option_id=p1.option_id if p1.option_id == p2.option_id else None,
+        )
+        self.proposals[merged_id] = merged
+        self.next_proposal_id += 1
+        p1.alive = False
+        p2.alive = False
+        for supporter in supporters:
+            self.agents[supporter].current_support = merged_id
+        return {"type": "merge", "proposal_a": pid, "proposal_b": merge_target,
+                "new_proposal_id": merged_id}
 
     def _handle_share_info(self, agent: Agent, action: Action) -> dict:
         """Handle information sharing."""
         target_id = action.target_id
-        if target_id is None or target_id not in self.agents:
+        if target_id is None or target_id not in agent.known_agents:
             return {"type": "share_failed", "reason": "invalid_target"}
 
         target = self.agents[target_id]
         info_id = action.information_id
 
         if info_id and info_id in self.information_pool:
+            if info_id not in agent.known_information:
+                return {"type": "share_failed", "reason": "sender_lacks_info"}
             if info_id not in target.known_information:
                 target.known_information.append(info_id)
-            return {"type": "share_information", "target": target_id, "info_id": info_id}
+                target.information_sources[info_id] = agent.id
+            return {
+                "type": "share_information", "target": target_id, "info_id": info_id,
+                "information_correct": self.information_pool[info_id].correct,
+            }
 
         return {"type": "share_failed", "reason": "invalid_info"}
 
     def _handle_request_info(self, agent: Agent, action: Action) -> dict:
         """Handle information request."""
         target_id = action.target_id
-        if target_id is None or target_id not in self.agents:
+        if target_id is None or target_id not in agent.known_agents:
             return {"type": "request_failed", "reason": "invalid_target"}
 
         target = self.agents[target_id]
@@ -241,26 +320,34 @@ class Society:
             info_id = self.rng.choice(target.known_information)
             if info_id not in agent.known_information:
                 agent.known_information.append(info_id)
-            return {"type": "request_information", "target": target_id, "info_id": str(info_id)}
+                agent.information_sources[str(info_id)] = target_id
+            return {
+                "type": "request_information", "target": target_id, "info_id": str(info_id),
+                "information_correct": self.information_pool[str(info_id)].correct,
+            }
 
         return {"type": "request_failed", "reason": "target_has_no_info"}
 
     def _handle_contact(self, agent: Agent, action: Action) -> dict:
         """Handle new social contact."""
         target_id = action.target_id
-        if target_id is None or target_id not in self.agents:
+        if target_id is None or target_id not in self.agents or target_id == agent.id:
             return {"type": "contact_failed", "reason": "invalid_target"}
+        if self.network_mode != "local":
+            return {"type": "contact_failed", "reason": "network_fixed"}
 
         if target_id not in agent.known_agents:
             agent.known_agents.add(target_id)
-            agent.trust[target_id] = 0.5
+            agent.trust[target_id] = 0.25
 
         return {"type": "contact", "target": target_id}
 
     def _handle_follow(self, agent: Agent, action: Action) -> dict:
         """Handle follow action."""
+        if self.network_mode != "local":
+            return {"type": "follow_failed", "reason": "network_fixed"}
         target_id = action.target_id
-        if target_id is None or target_id not in self.agents:
+        if target_id is None or target_id not in agent.known_agents:
             return {"type": "follow_failed", "reason": "invalid_target"}
 
         if target_id not in agent.known_agents:
@@ -271,8 +358,10 @@ class Society:
 
     def _handle_unfollow(self, agent: Agent, action: Action) -> dict:
         """Handle unfollow action."""
+        if self.network_mode != "local":
+            return {"type": "unfollow_failed", "reason": "network_fixed"}
         target_id = action.target_id
-        if target_id is None:
+        if target_id is None or target_id not in agent.known_agents:
             return {"type": "unfollow_failed", "reason": "no_target"}
 
         if target_id in agent.known_agents:
@@ -286,6 +375,15 @@ class Society:
         if source_id in agent.trust:
             delta = 0.05 if info_correct else -0.1
             agent.trust[source_id] = max(0.0, min(1.0, agent.trust[source_id] + delta))
+
+    def settle_task(self, winner: Optional[int]):
+        """Resolve information outcomes and retain learning across tasks."""
+        for agent in self.agents.values():
+            for info_id, source_id in agent.information_sources.items():
+                info = self.information_pool.get(info_id)
+                if info is not None:
+                    self.update_trust(agent, source_id, info.correct)
+            agent.memory.append(f"task={self.current_task['id']} winner={winner}")
 
     def distribute_information(self, task_info: dict):
         """Distribute information asymmetrically to agents."""
@@ -304,6 +402,9 @@ class Society:
                 accuracy=info.get("accuracy", 0.8),
                 source_agent=-1,
                 round_created=self.round_count,
+                correct=bool(self.rng.random() < info.get("accuracy", 0.8)),
+                option_id=int(info.get("option_id", 0)),
+                value=float(info.get("value", 0.0)),
             )
             self.information_pool[info_id] = info_obj
             self.next_info_id += 1
@@ -323,11 +424,12 @@ class Society:
 
         # Reset agent task state
         for agent in self.agents.values():
-            agent.energy = self.budget * self.rng.uniform(0.8, 1.0)
+            agent.energy = self.budget
             agent.current_support = None
             agent.current_proposal = None
             agent.has_proposed = False
             agent.known_information.clear()
+            agent.information_sources.clear()
 
         # Distribute information
         self.distribute_information(task)
@@ -350,9 +452,14 @@ class Society:
                 if sid in self.agents:
                     # Average trust from all agents toward this supporter
                     trust_vals = [a.trust.get(sid, 0.5) for a in self.agents.values() if sid in a.known_agents]
-                    avg_trust = np.mean(trust_vals) if trust_vals else 0.5
+                    avg_trust = np.mean(trust_vals) if trust_vals else 0.0
                     trust_sum += avg_trust
+            confidence = np.mean(list(p.support_confidence.values())) if p.support_confidence else 0.5
+            opposition = p.oppose_count / max(self.agent_count, 1)
+            diffusion = len({neighbor for sid in p.supporters
+                             for neighbor in self.agents[sid].known_agents}) / max(self.agent_count, 1)
             scores[p.id] = p.support_count * (1 + trust_sum / max(p.support_count, 1))
+            scores[p.id] *= confidence * (1 - opposition) * (1 + diffusion)
 
         # Add stability bonus (older proposals are more stable)
         for p in alive_proposals:
@@ -373,6 +480,7 @@ class Society:
         return {
             "round": self.round_count,
             "task": self.task_count,
+            "network_mode": self.network_mode,
             "agents": {id: a.to_dict() for id, a in self.agents.items()},
             "proposals": {id: p.to_dict() for id, p in self.proposals.items()},
             "information": {id: i.to_dict() for id, i in self.information_pool.items()},

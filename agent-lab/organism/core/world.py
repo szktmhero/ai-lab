@@ -4,7 +4,10 @@ import numpy as np
 from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass, field
 
-from .types import Vec2, CellState, CELL_STATE_DIM, SIGNAL_DIM
+from .types import (
+    Vec2, CELL_STATE_DIM, SIGNAL_DIM, BASE_METABOLISM, MOVE_COST,
+    SIGNAL_COST, RESOURCE_GAIN, MAX_ENERGY,
+)
 from .cell import Cell
 
 
@@ -24,8 +27,8 @@ def _perlin_like_field(w: int, h: int, scale: float, rng: np.random.Generator) -
         noise = rng.random((h, w))
         # Smooth via box blur
         kernel_size = max(1, int(3 / freq))
-        from scipy.ndimage import uniform_filter
         try:
+            from scipy.ndimage import uniform_filter
             smoothed = uniform_filter(noise, size=kernel_size)
         except ImportError:
             # Fallback: simple averaging
@@ -55,6 +58,9 @@ class World:
 
         self.rng = np.random.default_rng(seed)
         self.step_count = 0
+        self.resource_consumed = 0.0
+        self.resource_regenerated = 0.0
+        self.events: List[dict] = []
 
         # Resource grid
         self.resource_field = self._init_resources()
@@ -81,6 +87,8 @@ class World:
 
     def _init_cells(self):
         """Place cells at random positions (no overlaps)."""
+        if self.cell_count > self.width * self.height:
+            raise ValueError("cell_count cannot exceed the number of grid positions")
         positions = set()
         for i in range(self.cell_count):
             while True:
@@ -135,24 +143,37 @@ class World:
         neighbors = self.get_neighbors(cell)
         neighbor_obs = []
         for n in neighbors:
-            dist = abs(n.pos.x - cell.pos.x) + abs(n.pos.y - cell.pos.y)
-            # Handle toroidal distance
-            if dist > self.width // 2:
-                dist = self.width - dist
+            dx = n.pos.x - cell.pos.x
+            dy = n.pos.y - cell.pos.y
+            if dx > 1:
+                dx -= self.width
+            elif dx < -1:
+                dx += self.width
+            if dy > 1:
+                dy -= self.height
+            elif dy < -1:
+                dy += self.height
             neighbor_obs.append({
-                "relative_pos": [n.pos.x - cell.pos.x, n.pos.y - cell.pos.y],
+                "relative_pos": [dx, dy],
                 "energy": n.energy / 100.0,
                 "signal": n.signal_output.copy(),
-                "distance": dist,
+                "distance": abs(dx) + abs(dy),
             })
 
-        # Local resource
+        # Local resource, including the four reachable neighboring positions.
         local_resource = self.resource_field[cell.pos.y, cell.pos.x] / RESOURCE_MAX
+        directional_resource = {
+            1: self.resource_field[(cell.pos.y - 1) % self.height, cell.pos.x] / RESOURCE_MAX,
+            2: self.resource_field[(cell.pos.y + 1) % self.height, cell.pos.x] / RESOURCE_MAX,
+            3: self.resource_field[cell.pos.y, (cell.pos.x + 1) % self.width] / RESOURCE_MAX,
+            4: self.resource_field[cell.pos.y, (cell.pos.x - 1) % self.width] / RESOURCE_MAX,
+        }
 
         return {
             "self_state": self_state,
             "neighbors": neighbor_obs,
             "local_resource": local_resource,
+            "directional_resource": directional_resource,
         }
 
     def apply_action(self, cell: Cell, action: int, signal: Optional[np.ndarray] = None):
@@ -163,32 +184,42 @@ class World:
         cell.age += 1
 
         # Base metabolism cost
-        cell.energy -= 0.5
+        cell.energy -= BASE_METABOLISM
 
         # Movement actions
-        if action == 1:  # MOVE_N
-            cell.pos = self.wrap_pos(Vec2(cell.pos.x, cell.pos.y - 1))
-            cell.energy -= 0.3
-        elif action == 2:  # MOVE_S
-            cell.pos = self.wrap_pos(Vec2(cell.pos.x, cell.pos.y + 1))
-            cell.energy -= 0.3
-        elif action == 3:  # MOVE_E
-            cell.pos = self.wrap_pos(Vec2(cell.pos.x + 1, cell.pos.y))
-            cell.energy -= 0.3
-        elif action == 4:  # MOVE_W
-            cell.pos = self.wrap_pos(Vec2(cell.pos.x - 1, cell.pos.y))
-            cell.energy -= 0.3
+        if action in (1, 2, 3, 4):
+            offsets = {1: (0, -1), 2: (0, 1), 3: (1, 0), 4: (-1, 0)}
+            dx, dy = offsets[action]
+            destination = self.wrap_pos(Vec2(cell.pos.x + dx, cell.pos.y + dy))
+            if self.get_cell_at(destination.x, destination.y) is None:
+                cell.pos = destination
+            cell.energy -= MOVE_COST
         elif action == 5:  # CONSUME
             res = self.resource_field[cell.pos.y, cell.pos.x]
             if res > 0.1:
-                gain = min(5.0, res)
+                gain = min(RESOURCE_GAIN, res, MAX_ENERGY - cell.energy)
                 cell.energy += gain
                 self.resource_field[cell.pos.y, cell.pos.x] -= gain
-                cell.energy = min(100.0, cell.energy)
+                self.resource_consumed += gain
+                cell.energy = min(MAX_ENERGY, cell.energy)
+                self.events.append({
+                    "step": self.step_count,
+                    "cell_id": cell.id,
+                    "event": "consume",
+                    "amount": float(gain),
+                    "position": [cell.pos.x, cell.pos.y],
+                })
         elif action == 6:  # EMIT_SIGNAL
             if signal is not None:
                 cell.signal_output = signal.copy()
-                cell.energy -= 0.2
+                cell.energy -= SIGNAL_COST
+                self.events.append({
+                    "step": self.step_count,
+                    "cell_id": cell.id,
+                    "event": "signal",
+                    "magnitude": float(np.linalg.norm(signal)),
+                    "position": [cell.pos.x, cell.pos.y],
+                })
             else:
                 # Default: emit current signal (no change)
                 pass
@@ -196,12 +227,20 @@ class World:
         # Check death
         if cell.energy <= 0:
             cell.alive = False
+            self.events.append({
+                "step": self.step_count,
+                "cell_id": cell.id,
+                "event": "death",
+                "position": [cell.pos.x, cell.pos.y],
+            })
 
     def regen_resources(self):
         """Regenerate resources over time."""
-        regen = self.rng.random((self.height, self.width)) * 0.1
+        regen = self.rng.random((self.height, self.width)) * (2 * RESOURCE_REGEN_RATE)
+        before = self.resource_field.copy()
         self.resource_field += regen
         self.resource_field = np.minimum(self.resource_field, RESOURCE_MAX)
+        self.resource_regenerated += float(np.sum(self.resource_field - before))
 
     def run_step(self, policy_fn):
         """
@@ -210,13 +249,18 @@ class World:
         """
         self.step_count += 1
 
-        # Process each living cell
-        for cell in list(self.cells.values()):
-            if not cell.alive:
-                continue
-
+        living = [cell for cell in self.cells.values() if cell.alive]
+        self.rng.shuffle(living)
+        decisions = []
+        for cell in living:
             obs = self.observe(cell)
             action, signal = policy_fn(cell, obs)
+            decisions.append((cell, action, signal))
+
+        # Decisions share a start-of-step observation; seeded shuffling resolves
+        # movement conflicts without privileging low cell IDs.
+        self.rng.shuffle(decisions)
+        for cell, action, signal in decisions:
             self.apply_action(cell, action, signal)
 
         # Resource regeneration
@@ -231,4 +275,6 @@ class World:
             "step": self.step_count,
             "cells": {id: c.to_dict() for id, c in self.cells.items()},
             "resource_field": self.resource_field.tolist(),
+            "resource_consumed": self.resource_consumed,
+            "resource_regenerated": self.resource_regenerated,
         }

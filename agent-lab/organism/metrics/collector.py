@@ -57,10 +57,10 @@ class MetricsCollector:
         # Distance between cells
         if len(alive_cells) > 1:
             positions = np.array([[c.pos.x, c.pos.y] for c in alive_cells])
-            # Average pairwise distance (approximate)
+            # Exact average pairwise distance is inexpensive for 128 cells.
             dists = []
             for i in range(len(positions)):
-                for j in range(i + 1, min(i + 10, len(positions))):  # Sample
+                for j in range(i + 1, len(positions)):
                     dx = abs(positions[i][0] - positions[j][0])
                     dy = abs(positions[i][1] - positions[j][1])
                     # Toroidal distance
@@ -71,7 +71,6 @@ class MetricsCollector:
         else:
             avg_distance = 0.0
 
-        # Resource consumption (approximate)
         total_resource = float(np.sum(world.resource_field))
 
         # Spatial entropy (simplified)
@@ -95,7 +94,9 @@ class MetricsCollector:
             "average_signal_magnitude": round(avg_signal_mag, 4),
             "signal_variance": round(signal_var, 4),
             "average_distance_between_cells": round(avg_distance, 4),
-            "resource_consumption": round(total_resource, 4),
+            "resource_consumption": round(world.resource_consumed, 4),
+            "resource_remaining": round(total_resource, 4),
+            "resource_regenerated": round(world.resource_regenerated, 4),
             "spatial_entropy": round(spatial_entropy, 4),
             "signal_diversity": round(signal_diversity, 4),
             "cell_state_diversity": round(state_diversity, 4),
@@ -122,9 +123,12 @@ class MetricsCollector:
                     continue
                 visited.add(p)
                 cluster.append(p)
-                # Check 4-connected neighbors
-                for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-                    np_ = (p[0] + dx, p[1] + dy)
+                # Use the same Moore neighborhood as cell perception.
+                for dx, dy in [
+                    (-1, -1), (0, -1), (1, -1), (-1, 0),
+                    (1, 0), (-1, 1), (0, 1), (1, 1),
+                ]:
+                    np_ = ((p[0] + dx) % world.width, (p[1] + dy) % world.height)
                     if np_ not in visited and np_ in alive_cells:
                         queue.append(np_)
             clusters.append(len(cluster))
@@ -160,6 +164,9 @@ class MetricsCollector:
             return 0.0
 
         signals = np.array([c.signal_output for c in alive_cells])
+        signals = signals[np.linalg.norm(signals, axis=1) > 1e-12]
+        if len(signals) < 2:
+            return 0.0
         # Compute pairwise cosine distances
         norms = np.linalg.norm(signals, axis=1, keepdims=True)
         norms = np.where(norms > 0, norms, 1.0)
@@ -167,7 +174,7 @@ class MetricsCollector:
 
         # Average pairwise cosine similarity
         sim_matrix = normalized @ normalized.T
-        n = len(alive_cells)
+        n = len(signals)
         avg_sim = (np.sum(sim_matrix) - n) / (n * (n - 1)) if n > 1 else 0.0
         return float(1.0 - avg_sim)  # Diversity = 1 - similarity
 

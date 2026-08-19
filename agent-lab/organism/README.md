@@ -51,28 +51,30 @@ uv pip install numpy
 
 ## Experiment Results (10 seeds × 1000 steps)
 
-### Survival Rate
+### Final Survivors
 
 | Policy | Mean | Std | Min | Max |
 |--------|------|-----|-----|-----|
-| Random | 0.30 | 0.46 | 0 | 1 |
-| RuleBased | 39.40 | 3.41 | 34 | 46 |
+| Random | 0.20 | 0.40 | 0 | 1 |
+| RuleBased | 46.30 | 2.49 | 43 | 50 |
 
 ### Key Observations
 
 **Observed:**
-- RandomPolicy: 128セル中 0-1セルが生存（平均0.3）
-- RuleBasedPolicy: 128セル中 34-46セルが生存（平均39.4）
-- RuleBasedPolicy は RandomPolicy より **130倍以上** の生存率
+- RandomPolicy: 128セル中 0-1セルが生存（平均0.2）
+- RuleBasedPolicy: 128セル中 43-50セルが生存（平均46.3）
+- RuleBasedPolicy の最終生存数は平均で46.1セル多い
+- RuleBasedPolicy の最終最大clusterは平均2.8セルで、大規模構造は観測されていない
+- RuleBasedPolicy の最終signal diversityは0.993。ただしsignal規則にはnoiseと近傍平均が設計されている
 
 **Inferred:**
-- エネルギー消費と資源獲得のバランスが生存に重要
-- 低エネルギー時の「資源に向かって移動」ルールが生存率を大幅に向上
-- 高エネルギー時の信号発信が集団協調の初期形態の可能性
+- この環境では、低energy時のconsumeと隣接resource比較を含むpolicyが生存に寄与した
+- `Survivors / 1000 Resource` は Random 0.026、RuleBased 1.212だった
 
 **Speculative:**
-- 信号多様性（signal_diversity）の違いは空間的配置の違いと相関する可能性
-- RuleBasedPolicy のクラスター形成は偶然ではなく、資源獲得戦略の副産物の可能性
+- signalに共有された意味が発生したかは未検証
+- 小規模clusterが自己組織化なのか、衝突とresource配置の副作用なのかは未検証
+- 生命・知性・役割分化が生じたとは結論できない
 
 ## Metrics
 
@@ -82,7 +84,9 @@ uv pip install numpy
 - `number_of_clusters` — クラスター数
 - `signal_diversity` — 信号の多様性
 - `spatial_entropy` — 空間エントロピー
-- `resource_consumption` — 資源消費量
+- `resource_consumption` — 累積資源消費量
+- `resource_remaining` — 現在の残存資源量
+- `resource_regenerated` — 累積資源再生量
 
 ## Visualization
 

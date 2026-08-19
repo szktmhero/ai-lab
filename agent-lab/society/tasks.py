@@ -60,13 +60,22 @@ def generate_task(seed: int, task_num: int, n_agents: int = 128) -> dict:
     selected_indices = rng.choice(len(ALL_FRAGMENTS), size=n_fragments, replace=False)
     fragments = [ALL_FRAGMENTS[i] for i in selected_indices]
 
-    # Assign categories and accuracy
+    option_count = 8
+    option_quality = rng.uniform(-1.0, 1.0, size=option_count)
+
+    # Assign noisy evidence to alternatives. Reliability and latent quality are
+    # retained by the environment but are not exposed to agent observations.
     information_fragments = []
     for i, frag in enumerate(fragments):
+        option_id = i % option_count
+        accuracy = float(rng.uniform(0.2, 0.95))
+        noise = rng.normal(0, 1.0 - accuracy)
         info = {
-            "content": frag,
+            "content": f"Option {option_id}: {frag}",
             "category": CATEGORIES[i % len(CATEGORIES)],
-            "accuracy": float(rng.uniform(0.5, 1.0)),
+            "accuracy": accuracy,
+            "option_id": option_id,
+            "value": float(option_quality[option_id] + noise),
             "id": f"frag_{task_num}_{i}",
         }
         information_fragments.append(info)
@@ -84,6 +93,8 @@ def generate_task(seed: int, task_num: int, n_agents: int = 128) -> dict:
         "id": task_num,
         "goal": goals[task_num % len(goals)],
         "information_fragments": information_fragments,
+        "options": [f"option_{i}" for i in range(option_count)],
+        "option_quality": option_quality.tolist(),
         "max_rounds": 50,
         "context": f"Task {task_num}: {goals[task_num % len(goals)]}",
     }
