@@ -12,9 +12,9 @@ from ..core.types import BrainState, ModelOutput, Signal
 class ModelAdapter(ABC):
     """A model call that can be audited and budgeted.
 
-    Real LLM adapters can implement the same method later.  The first pilot
-    intentionally uses a weak deterministic adapter so it validates the harness
-    without API cost or hidden model variance.
+    The deterministic pilot adapter and the Phase 3 Responses API adapter share
+    this condition-invariant contract. Architecture code chooses the signals and
+    mode; adapters account for every successful inference through the budget.
     """
 
     @abstractmethod

@@ -6,7 +6,8 @@
 This directory contains the first causal Brain Kernel: a bounded workspace,
 episodic memory, conflict monitoring, dynamic internal state, salience routing,
 and a replaceable model adapter. The initial run uses a deterministic test double
-to validate experimental controls before any real-model claim is attempted.
+to validate experimental controls. Phase 3 now includes a real-model adapter and
+a locked blind protocol, but the paid blind run has **not** been executed.
 
 ## Quick start
 
@@ -14,6 +15,12 @@ From the repository root:
 
 ```bash
 PYTHONPATH=agent-lab python -m brain.experiments.run
+```
+
+Offline Phase 3 preflight (no API call):
+
+```bash
+PYTHONPATH=agent-lab python -m brain.experiments.formal
 ```
 
 Tests, including the existing organism and society suites:
@@ -37,6 +44,35 @@ UV_CACHE_DIR=/tmp/ai-lab-uv-cache PYTHONPATH=agent-lab \
 
 All conditions share the same adapter and immutable public task views. The
 evaluator owns answers and fault annotations.
+
+## Phase 3 status
+
+The committed `brain-real-llm-v1` protocol freezes:
+
+- `gpt-5.4-mini-2026-03-17`, OpenAI Python SDK `2.51.0`, reasoning effort
+  `none`, Responses API, no tools, no conversation state, `store=false`, SDK
+  retries disabled, and fixed timeout/request pacing;
+- a four-call, 8,192-input-token, 512-output-token episode cap shared by every
+  condition, with 128 output tokens reserved before each call;
+- provider-side input counting before inference and exact comparison with the
+  returned response usage;
+- 10 matched seeds × 20 instances × four task types in a new evaluator-inclusive
+  SHA-256-locked blind suite;
+- the original hypotheses, primary metrics, paired-seed analysis, and success
+  thresholds before any outcome is observed;
+- a source hash over the executable Brain package and dependency declaration,
+  plus mechanical H1–H4 threshold decisions in the eventual formal report.
+
+The latest OpenAI family listed on 2026-08-20 is GPT-5.6. Its cost-sensitive Luna
+page did not list a dated snapshot, so the formal protocol selects the strongest
+cost-conscious model with a documented dated snapshot instead. This sacrifices
+some recency for reproducibility. A later model-capacity sweep must use a new
+protocol and cannot overwrite this result.
+
+See [PHASE3.md](PHASE3.md) and the committed
+`experiments/formal_protocol.lock.json`. Live execution is deliberately gated by
+the lock hash and `OPENAI_API_KEY`; ordinary tests and preflight make no paid API
+calls.
 
 ## Results and interpretation
 
@@ -69,6 +105,8 @@ pilot contrasts.
 The deterministic pilot can establish that a causal route is implemented and
 measurable. It cannot establish that the architecture is brain-like, that it
 improves a real LLM, or that individuality, subjectivity, or emergence occurred.
+
+Until the locked blind matrix is executed, there is still no real-model result.
 
 See [the research specification](../../lab_brain.md) and
 [the technical architecture](ARCHITECTURE.md) before interpreting results.

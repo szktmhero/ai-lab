@@ -11,7 +11,7 @@ from ..modules.error_monitor import ErrorMonitor
 from ..modules.perception import PerceptionGateway
 from ..modules.router import SalienceRouter
 from ..observer.observer import BrainObserver
-from .budget import InferenceBudget
+from .budget import BudgetLimits, InferenceBudget
 from .memory import EpisodicMemory
 from .types import (
     BrainState,
@@ -74,6 +74,7 @@ def _hypothesis_signal(
     output: ModelOutput,
     candidate_count: int,
     *,
+    ordinal: int,
     weight: float = 1.0,
 ) -> Signal:
     scores = [0.0] * candidate_count
@@ -81,7 +82,10 @@ def _hypothesis_signal(
     # confidence still controls its influence.
     scores[output.candidate] = weight * (0.25 + output.confidence)
     return Signal(
-        signal_id=f"hypothesis:{output.mode}:{step}:{len(output.used_signal_ids)}",
+        signal_id=(
+            f"hypothesis:{output.mode}:{ordinal}:{step}:"
+            f"{len(output.used_signal_ids)}"
+        ),
         episode_id=episode_id,
         step=step,
         cue="final_hypothesis",
@@ -119,10 +123,16 @@ class BrainSystem:
         *,
         model: ModelAdapter | None = None,
         memory: EpisodicMemory | None = None,
+        budget_limits: BudgetLimits | None = None,
     ) -> None:
         self.config = config or BRAIN_CONDITIONS["brain_full"]
         self.model = model or DeterministicModelAdapter()
         self.memory = memory or EpisodicMemory()
+        self.budget_limits = budget_limits or BudgetLimits(
+            max_calls=self.config.max_model_calls,
+            max_input_units=self.config.max_input_units,
+            max_output_units=self.config.max_output_units,
+        )
 
     def run(
         self,
@@ -138,11 +148,7 @@ class BrainSystem:
         perception = PerceptionGateway()
         error_monitor = ErrorMonitor()
         router = SalienceRouter()
-        budget = InferenceBudget(
-            max_calls=self.config.max_model_calls,
-            max_input_units=self.config.max_input_units,
-            max_output_units=self.config.max_output_units,
-        )
+        budget = self.budget_limits.create_budget()
         episode_signals: list[Signal] = []
         online_predictions: list[int | None] = []
         memory_writes_before = self.memory.write_count
@@ -265,11 +271,12 @@ class BrainSystem:
                 final_step,
                 output,
                 task.candidate_count,
+                ordinal=index,
                 # Robust evidence is promoted only after the independent error
                 # monitor reports conflict.  The ablation removes this path.
                 weight=2.0 if output.mode == "robust" else 1.0,
             )
-            for output in outputs
+            for index, output in enumerate(outputs)
         ]
         final = self._infer(
             task,
@@ -332,6 +339,10 @@ class BrainSystem:
                 "memory_hits": self.memory.hit_count - memory_hits_before,
                 "retrieved_records": len(retrieved),
                 "model_modes": [output.mode for output in outputs] + ["integrate"],
+                "model_call_records": [
+                    self._call_record(output) for output in [*outputs, final]
+                ],
+                "usage_unit": budget.unit_name,
                 "invalid_actions": 0,
                 "no_ops": 0,
             },
@@ -363,8 +374,30 @@ class BrainSystem:
             candidate=output.candidate,
             confidence=output.confidence,
             used_signal_ids=list(output.used_signal_ids),
+            input_units=output.input_units,
+            output_units=output.output_units,
+            response_id=output.response_id,
+            model_id=output.model_id,
+            request_hash=output.request_hash,
+            output_hash=output.output_hash,
         )
         return output
+
+    @staticmethod
+    def _call_record(output: ModelOutput) -> dict[str, object]:
+        return {
+            "mode": output.mode,
+            "candidate": output.candidate,
+            "confidence": output.confidence,
+            "scores": list(output.scores),
+            "used_signal_ids": list(output.used_signal_ids),
+            "input_units": output.input_units,
+            "output_units": output.output_units,
+            "response_id": output.response_id,
+            "model_id": output.model_id,
+            "request_hash": output.request_hash,
+            "output_hash": output.output_hash,
+        }
 
 
 def brain_config(condition: str) -> BrainConfig:

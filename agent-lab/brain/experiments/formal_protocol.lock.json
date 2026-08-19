@@ -1,0 +1,208 @@
+{
+  "lock_sha256": "f7bbbae84eb5bc2ba6a1dfc381b6dd7725e44dfd81b160248baf07d24ba4939f",
+  "protocol": {
+    "analysis": {
+      "claim_labels": [
+        "DESIGNED",
+        "OBSERVED",
+        "INFERRED",
+        "SPECULATIVE"
+      ],
+      "contrasts": [
+        {
+          "description": "Full recurrent architecture versus a single full-context inference",
+          "left": "brain_full",
+          "right": "single_long_context"
+        },
+        {
+          "description": "Full recurrent architecture versus a strong sequential reflection baseline",
+          "left": "brain_full",
+          "right": "sequential_reflection"
+        },
+        {
+          "description": "Full recurrent architecture versus flat partitioned aggregation",
+          "left": "brain_full",
+          "right": "flat_ensemble"
+        },
+        {
+          "description": "Causal effect of bounded episodic retrieval",
+          "left": "brain_full",
+          "right": "brain_no_memory"
+        },
+        {
+          "description": "Causal effect of conflict-triggered robust processing",
+          "left": "brain_full",
+          "right": "brain_no_error_monitor"
+        },
+        {
+          "description": "Adaptive versus fixed robust routing",
+          "left": "brain_full",
+          "right": "brain_static_routing"
+        },
+        {
+          "description": "Effect of connecting observed prediction error to routing",
+          "left": "brain_full",
+          "right": "brain_no_internal_state_coupling"
+        }
+      ],
+      "inference_unit": "per-seed mean over matched tasks",
+      "matched_seed_count": 10,
+      "metrics": [
+        "accuracy",
+        "regime_switch_accuracy",
+        "delayed_recall_accuracy",
+        "fault_recovery_accuracy",
+        "avg_model_calls",
+        "avg_input_units",
+        "partial_observation_accuracy",
+        "avg_output_units",
+        "avg_total_units"
+      ],
+      "retain_task_level_failures": true,
+      "threshold_decision_rule": "PASS iff every preregistered point-effect threshold for that hypothesis passes. Exact sign-flip tests and paired bootstrap intervals are reported as uncertainty, not substituted post hoc as extra pass gates."
+    },
+    "blind_tasks": {
+      "instances_per_task_type_per_seed": 20,
+      "seeds": [
+        1000,
+        1001,
+        1002,
+        1003,
+        1004,
+        1005,
+        1006,
+        1007,
+        1008,
+        1009
+      ],
+      "suite_sha256": "3ddb5460674ce6b85ce4bde0744a430f83f0b59e0abfc8d9c1b99b33d3d8fc99",
+      "suite_version": "brain-blind-v1",
+      "task_count": 800,
+      "task_types": [
+        "latent_rule_switch",
+        "delayed_recall",
+        "fault_recovery",
+        "partial_observation_plan"
+      ],
+      "unblinding_rule": "No live model call or outcome inspection before the acknowledged all-condition formal run. Development smoke tests use pilot tasks."
+    },
+    "condition_order": "Deterministic task-block shuffle derived from protocol_id and opaque task_id",
+    "conditions": [
+      "single_long_context",
+      "sequential_reflection",
+      "flat_ensemble",
+      "brain_full",
+      "brain_no_memory",
+      "brain_no_error_monitor",
+      "brain_static_routing",
+      "brain_no_internal_state_coupling"
+    ],
+    "episode_budget": {
+      "matching_rule": "Every condition receives the identical hard cap. Each call is preflighted with the provider count and its full output allowance; actual response usage is committed. No padding or dummy calls.",
+      "max_calls": 4,
+      "max_input_tokens": 8192,
+      "max_output_tokens": 512,
+      "max_output_tokens_per_call": 128
+    },
+    "failure_and_amendment_policy": {
+      "automatic_inference_retries": 0,
+      "blind_task_tuning": "forbidden",
+      "nonempty_output_directory": "refuse to start",
+      "post_outcome_threshold_changes": "forbidden",
+      "protocol_amendments": "must create a new protocol id and lock before any new outcomes",
+      "protocol_violation": "abort and preserve partial append-only artifacts"
+    },
+    "implementation": {
+      "exclusions": [
+        "tests",
+        "generated results",
+        "documentation",
+        "bytecode"
+      ],
+      "files": [
+        "__init__.py",
+        "baselines.py",
+        "core/__init__.py",
+        "core/budget.py",
+        "core/memory.py",
+        "core/system.py",
+        "core/types.py",
+        "core/workspace.py",
+        "experiments/__init__.py",
+        "experiments/analysis.py",
+        "experiments/formal.py",
+        "experiments/individuality.py",
+        "experiments/run.py",
+        "metrics/__init__.py",
+        "metrics/collector.py",
+        "models/__init__.py",
+        "models/base.py",
+        "models/deterministic.py",
+        "models/openai_responses.py",
+        "modules/__init__.py",
+        "modules/error_monitor.py",
+        "modules/perception.py",
+        "modules/router.py",
+        "observer/__init__.py",
+        "observer/observer.py",
+        "pyproject.toml",
+        "tasks/__init__.py",
+        "tasks/blind.py",
+        "tasks/generator.py"
+      ],
+      "source_sha256": "e0f81e7b6b191ccca44709b1e8c271aad893a7b411083e4b65898bd2cb2abdf6"
+    },
+    "interpretation_limits": [
+      "A model-dependent effect is not a model-independent law of intelligence.",
+      "Designed modules and prompts are not emergent roles.",
+      "Accuracy gains do not establish personality, subjectivity, or consciousness.",
+      "Failure to find an effect does not establish impossibility for stronger models."
+    ],
+    "model_adapter": {
+      "client_max_retries": 0,
+      "client_timeout_seconds": 120.0,
+      "conversation_state": "disabled",
+      "endpoint": "responses",
+      "input_count_mismatch_policy": "abort the entire run",
+      "max_output_tokens": 128,
+      "min_request_interval_seconds": 0.15,
+      "model": "gpt-5.4-mini-2026-03-17",
+      "openai_sdk_version": "2.51.0",
+      "prompt_spec_sha256": "9593c7935a406a0277ce9214232f912e02b6e0b7490c3b6b3c6051e86ada0443",
+      "provider": "openai",
+      "provider_token_counting": "responses.input_tokens.count",
+      "reasoning_effort": "none",
+      "require_snapshot": true,
+      "response_usage_authority": "response.usage input_tokens/output_tokens",
+      "store": false,
+      "temperature": "provider default (parameter omitted)",
+      "tools": []
+    },
+    "model_invariance": {
+      "condition_visible_to_adapter": false,
+      "conversation_state_between_calls": false,
+      "internal_state_visible_to_model": false,
+      "one_adapter_instance": true,
+      "task_answer_visible_to_system": false
+    },
+    "primary_effect_thresholds": {
+      "H1_min_fault_recovery_gain_over_each_strong_baseline": 0.05,
+      "H1_min_regime_switch_gain_over_each_strong_baseline": 0.05,
+      "H2_min_delayed_recall_memory_ablation_effect": 0.1,
+      "H2_min_partial_integration_memory_ablation_effect": 0.1,
+      "H3_min_selective_fault_ablation_effect": 0.1,
+      "H4_compute_metric": "avg_total_units",
+      "H4_max_accuracy_loss": 0.02,
+      "H4_min_compute_reduction_fraction": 0.1
+    },
+    "primary_hypotheses": {
+      "H1": "brain_full improves regime-switch and fault recovery over both sequential_reflection and flat_ensemble",
+      "H2": "brain_full selectively improves delayed recall and partial integration over brain_no_memory",
+      "H3": "brain_full selectively improves fault recovery over brain_no_error_monitor",
+      "H4": "brain_full reduces token/call compute versus brain_static_routing without a material accuracy loss",
+      "H5": "history dependence remains a separate causal manipulation and is not a primary formal emergence outcome"
+    },
+    "protocol_id": "brain-real-llm-v1",
+    "status": "LOCKED_NOT_EXECUTED"
+  }
+}

@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict
 from typing import TYPE_CHECKING
 
-from .core.budget import InferenceBudget
+from .core.budget import BudgetLimits, InferenceBudget
 from .core.system import _hypothesis_signal
 from .core.types import (
     BrainState,
@@ -31,11 +31,17 @@ BASELINE_CONDITIONS = (
 
 
 class BaselineSystem:
-    def __init__(self, condition: str, model: ModelAdapter | None = None):
+    def __init__(
+        self,
+        condition: str,
+        model: ModelAdapter | None = None,
+        budget_limits: BudgetLimits | None = None,
+    ):
         if condition not in BASELINE_CONDITIONS:
             raise ValueError(f"unknown baseline condition: {condition}")
         self.condition = condition
         self.model = model or DeterministicModelAdapter()
+        self.budget_limits = budget_limits or BudgetLimits()
 
     def run(
         self,
@@ -43,7 +49,7 @@ class BaselineSystem:
         observer: BrainObserver | None = None,
     ) -> SystemResult:
         observer = observer or BrainObserver()
-        budget = InferenceBudget(max_calls=4, max_input_units=48, max_output_units=8)
+        budget = self.budget_limits.create_budget()
         state = BrainState()
         perception = PerceptionGateway()
         signals: list[Signal] = []
@@ -66,26 +72,51 @@ class BaselineSystem:
             )
 
         final_step = max((event.step for event in task.observations), default=-1) + 1
+
+        def infer(call_signals: list[Signal], mode: str) -> ModelOutput:
+            return self._infer(
+                task,
+                call_signals,
+                mode,
+                state,
+                budget,
+                observer,
+                final_step,
+            )
+
         outputs: list[ModelOutput] = []
         if self.condition == "single_long_context":
-            final = self._infer(task, signals, "deliberate", state, budget)
+            final = infer(signals, "deliberate")
             outputs.append(final)
         elif self.condition == "sequential_reflection":
             outputs.extend(
                 [
-                    self._infer(task, signals[-2:], "fast", state, budget),
-                    self._infer(task, signals, "deliberate", state, budget),
-                    self._infer(task, signals, "robust", state, budget),
+                    infer(signals[-2:], "fast"),
+                    infer(signals, "deliberate"),
+                    infer(signals, "robust"),
                 ]
             )
-            final = self._integrate(task, outputs, state, budget, final_step)
+            final = self._integrate(
+                task,
+                outputs,
+                state,
+                budget,
+                observer,
+                final_step,
+            )
         else:
             partitions = [signals[index::3] for index in range(3)]
             outputs.extend(
-                self._infer(task, partition, "deliberate", state, budget)
-                for partition in partitions
+                infer(partition, "deliberate") for partition in partitions
             )
-            final = self._integrate(task, outputs, state, budget, final_step)
+            final = self._integrate(
+                task,
+                outputs,
+                state,
+                budget,
+                observer,
+                final_step,
+            )
 
         provenance = tuple(
             dict.fromkeys(
@@ -130,6 +161,23 @@ class BaselineSystem:
                 "retrieved_records": 0,
                 "model_modes": [output.mode for output in outputs]
                 + ([] if final in outputs else ["integrate"]),
+                "model_call_records": [
+                    {
+                        "mode": output.mode,
+                        "candidate": output.candidate,
+                        "confidence": output.confidence,
+                        "scores": list(output.scores),
+                        "used_signal_ids": list(output.used_signal_ids),
+                        "input_units": output.input_units,
+                        "output_units": output.output_units,
+                        "response_id": output.response_id,
+                        "model_id": output.model_id,
+                        "request_hash": output.request_hash,
+                        "output_hash": output.output_hash,
+                    }
+                    for output in [*outputs, *([] if final in outputs else [final])]
+                ],
+                "usage_unit": budget.unit_name,
                 "invalid_actions": 0,
                 "no_ops": 0,
             },
@@ -142,8 +190,10 @@ class BaselineSystem:
         mode: str,
         state: BrainState,
         budget: InferenceBudget,
+        observer: BrainObserver,
+        step: int,
     ) -> ModelOutput:
-        return self.model.infer(
+        output = self.model.infer(
             signals,
             query_cue=task.query_cue,
             candidate_count=task.candidate_count,
@@ -151,6 +201,22 @@ class BaselineSystem:
             state=state,
             budget=budget,
         )
+        observer.record(
+            task.task_id,
+            step,
+            "model_output",
+            mode=mode,
+            candidate=output.candidate,
+            confidence=output.confidence,
+            used_signal_ids=list(output.used_signal_ids),
+            input_units=output.input_units,
+            output_units=output.output_units,
+            response_id=output.response_id,
+            model_id=output.model_id,
+            request_hash=output.request_hash,
+            output_hash=output.output_hash,
+        )
+        return output
 
     def _integrate(
         self,
@@ -158,6 +224,7 @@ class BaselineSystem:
         outputs: list[ModelOutput],
         state: BrainState,
         budget: InferenceBudget,
+        observer: BrainObserver,
         step: int,
     ) -> ModelOutput:
         hypotheses = [
@@ -166,17 +233,39 @@ class BaselineSystem:
                 step,
                 output,
                 task.candidate_count,
+                ordinal=index,
             )
-            for output in outputs
+            for index, output in enumerate(outputs)
         ]
-        return self._infer(task, hypotheses, "integrate", state, budget)
+        return self._infer(
+            task,
+            hypotheses,
+            "integrate",
+            state,
+            budget,
+            observer,
+            step,
+        )
 
 
-def make_system(condition: str) -> BrainSystem | BaselineSystem:
+def make_system(
+    condition: str,
+    *,
+    model: ModelAdapter | None = None,
+    budget_limits: BudgetLimits | None = None,
+) -> BrainSystem | BaselineSystem:
     if condition in BASELINE_CONDITIONS:
-        return BaselineSystem(condition)
+        return BaselineSystem(
+            condition,
+            model=model,
+            budget_limits=budget_limits,
+        )
     from .core.system import BRAIN_CONDITIONS, BrainSystem
 
     if condition in BRAIN_CONDITIONS:
-        return BrainSystem(BRAIN_CONDITIONS[condition])
+        return BrainSystem(
+            BRAIN_CONDITIONS[condition],
+            model=model,
+            budget_limits=budget_limits,
+        )
     raise ValueError(f"unknown condition: {condition}")

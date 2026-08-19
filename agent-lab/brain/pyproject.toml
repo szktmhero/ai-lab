@@ -1,9 +1,12 @@
 [project]
 name = "brain-architecture-lab"
-version = "0.1.0"
+version = "0.2.0"
 description = "Causal, ablatable brain-architecture experiment harness"
 requires-python = ">=3.10"
 dependencies = []
+
+[project.optional-dependencies]
+real-model = ["openai==2.51.0"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

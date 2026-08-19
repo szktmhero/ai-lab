@@ -143,6 +143,13 @@ def test_budget_rejects_calls_before_overrun():
     assert budget.snapshot().model_calls == 1
 
 
+def test_budget_preflight_does_not_mutate_accounting():
+    budget = InferenceBudget(max_calls=1, max_input_units=2, max_output_units=1)
+    budget.ensure_can_consume(2, 1)
+    assert budget.snapshot().model_calls == 0
+    assert budget.snapshot().input_units == 0
+
+
 def test_full_system_is_deterministic_with_clean_state():
     task = generate_task(0, TaskType.LATENT_RULE_SWITCH, 0)
     left = BrainSystem(BRAIN_CONDITIONS["brain_full"]).run(task.view)
@@ -196,6 +203,25 @@ def test_every_condition_respects_declared_budget():
         assert result.usage.model_calls <= 4
         assert result.usage.input_units <= 48
         assert result.usage.output_units <= 8
+        assert result.usage.unit_name == "signals"
+
+
+def test_flat_ensemble_hypotheses_have_unique_provenance_ids():
+    task = generate_task(0, TaskType.PARTIAL_OBSERVATION, 0)
+    result = make_system("flat_ensemble").run(task.view)
+    integrate_record = result.trace["model_call_records"][-1]
+    hypothesis_ids = integrate_record["used_signal_ids"]
+    assert len(hypothesis_ids) == len(set(hypothesis_ids))
+
+
+def test_baseline_observer_records_every_model_call():
+    task = generate_task(0, TaskType.PARTIAL_OBSERVATION, 0)
+    observer = BrainObserver()
+    result = make_system("flat_ensemble").run(task.view, observer=observer)
+    model_events = [
+        event for event in observer.events if event["event_type"] == "model_output"
+    ]
+    assert len(model_events) == result.usage.model_calls
 
 
 def test_observer_can_reconstruct_an_episode():
