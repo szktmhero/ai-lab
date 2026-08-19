@@ -35,6 +35,34 @@ class Observer:
         edge_count = sum(degrees)
         possible_edges = len(ids) * max(len(ids) - 1, 1)
 
+        if not ids:
+            return {
+                "average_degree": 0.0,
+                "network_density": 0.0,
+                "clustering_coefficient": 0.0,
+                "connected_components": 0,
+                "centralization": 0.0,
+                "max_degree": 0,
+            }
+        if edge_count == 0:
+            return {
+                "average_degree": 0.0,
+                "network_density": 0.0,
+                "clustering_coefficient": 0.0,
+                "connected_components": len(ids),
+                "centralization": 0.0,
+                "max_degree": 0,
+            }
+        if len(ids) > 1 and all(degree == len(ids) - 1 for degree in degrees):
+            return {
+                "average_degree": float(len(ids) - 1),
+                "network_density": 1.0,
+                "clustering_coefficient": 1.0,
+                "connected_components": 1,
+                "centralization": 0.0,
+                "max_degree": len(ids) - 1,
+            }
+
         undirected = {aid: set() for aid in ids}
         for source, targets in adjacency.items():
             for target in targets:
@@ -58,7 +86,9 @@ class Observer:
             if degree < 2:
                 coefficients.append(0.0)
                 continue
-            links = sum(1 for a in neighbors for b in neighbors if a < b and b in undirected[a])
+            links = sum(
+                len(undirected[neighbor] & neighbors) for neighbor in neighbors
+            ) / 2
             coefficients.append(2 * links / (degree * (degree - 1)))
 
         max_degree = max(degrees, default=0)
@@ -115,7 +145,13 @@ class Observer:
         self.round_summaries.append(summary)
         return summary
 
-    def record_task_end(self, society, task_num: int, winner: Optional[int]):
+    def record_task_end(
+        self,
+        society,
+        task_num: int,
+        winner: Optional[int],
+        stop_reason: str = "unknown",
+    ):
         events = [event for event in self.event_log if event.get("task") == task_num]
         event_types = Counter(event.get("type") for event in events)
         proposal_counts = Counter(event["agent"] for event in events if event.get("type") == "propose")
@@ -158,6 +194,8 @@ class Observer:
             "decision_quality": selected_quality,
             "evidence_coverage": float(np.mean(supporter_coverage)) if supporter_coverage else 0.0,
             "decision_time": final_round.get("round", -1) + 1,
+            "stop_reason": stop_reason,
+            "reached_round_limit": stop_reason == "max_rounds",
             "consensus_level": winner_support / max(society.agent_count, 1),
             "minority_size": sum(
                 p.support_count for p in society.proposals.values() if p.alive and p.id != winner
@@ -255,6 +293,7 @@ class Observer:
                 f"Final consensus: {summary['consensus_level']:.3f}",
                 f"Information spread: {summary['information_spread']:.3f}",
                 f"Communication cost: {summary['communication_cost']:.1f}",
+                f"Stop reason: {summary['stop_reason']}",
                 f"Selected proposal: {summary['winner']}",
             ])
         return "\n".join(lines) + "\n"

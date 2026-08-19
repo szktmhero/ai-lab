@@ -138,6 +138,40 @@ class TestSociety:
         assert all(not agent.known_agents for agent in independent.agents.values())
         assert all(len(agent.known_agents) == 7 for agent in full.agents.values())
 
+    def test_matched_seed_isolates_population_and_information_from_topology(self):
+        societies = [
+            Society(agent_count=16, seed=7, network_mode=mode)
+            for mode in ("independent", "full", "local")
+        ]
+        for agent_id in range(16):
+            reference = societies[0].agents[agent_id]
+            for society in societies[1:]:
+                candidate = society.agents[agent_id]
+                assert np.array_equal(reference.preferences, candidate.preferences)
+                assert np.array_equal(reference.beliefs, candidate.beliefs)
+                assert reference.confidence == candidate.confidence
+
+        for society in societies:
+            society.start_task(generate_task(seed=7, task_num=0))
+
+        reference_information = {
+            info_id: info.to_dict()
+            for info_id, info in societies[0].information_pool.items()
+        }
+        reference_recipients = {
+            agent_id: list(agent.known_information)
+            for agent_id, agent in societies[0].agents.items()
+        }
+        for society in societies[1:]:
+            assert {
+                info_id: info.to_dict()
+                for info_id, info in society.information_pool.items()
+            } == reference_information
+            assert {
+                agent_id: list(agent.known_information)
+                for agent_id, agent in society.agents.items()
+            } == reference_recipients
+
 
 class TestPolicies:
     def test_random_policy(self):
@@ -156,6 +190,31 @@ class TestPolicies:
         obs = {"proposals": {}, "information_ids": [], "round": 0}
         action = policy.decide(agent, obs)
         assert action is not None
+
+    def test_social_evidence_weight_is_an_explicit_ablation(self):
+        agent = Agent(id=0, preferences=np.zeros(8, dtype=np.float32))
+        agent.current_support = 0
+        observation = {
+            "round": 2,
+            "proposals": {
+                0: {"id": 0, "option_id": 0, "support_count": 1, "oppose_count": 0},
+                1: {"id": 1, "option_id": 1, "support_count": 10, "oppose_count": 0},
+            },
+            "information": [],
+            "information_ids": [],
+            "known_agents": [],
+            "all_agent_ids": [0],
+            "network_mode": "independent",
+            "options": [f"option_{index}" for index in range(8)],
+        }
+
+        evidence_only = SimplePolicy(seed=1, social_evidence_weight=0.0)
+        social = SimplePolicy(seed=1, social_evidence_weight=0.05)
+
+        assert evidence_only.decide(agent, observation).action_type == ActionType.WAIT
+        social_action = social.decide(agent, observation)
+        assert social_action.action_type == ActionType.SUPPORT
+        assert social_action.proposal_id == 1
 
 
 class TestTasks:
@@ -206,6 +265,26 @@ class TestSimulation:
         task_zero_events = sum(event.get("task") == 0 for event in observer.event_log)
         assert observer.task_summaries[0]["events_this_task"] == task_zero_events
         assert observer.task_summaries[1]["agents_proposed"] <= 16
+
+    def test_stop_reason_distinguishes_stability_from_round_limit(self):
+        task = generate_task(seed=42, task_num=0)
+        stable_result = run_simulation(
+            Society(agent_count=16, seed=42, network_mode="independent"),
+            SimplePolicy(seed=42, social_evidence_weight=0.0),
+            task,
+            max_rounds=10,
+        )
+        limited_result = run_simulation(
+            Society(agent_count=16, seed=42, network_mode="independent"),
+            SimplePolicy(seed=42, social_evidence_weight=0.0),
+            task,
+            max_rounds=2,
+        )
+
+        assert stable_result["stop_reason"] == "stable_support"
+        assert not stable_result["task_summary"]["reached_round_limit"]
+        assert limited_result["stop_reason"] == "max_rounds"
+        assert limited_result["task_summary"]["reached_round_limit"]
 
 
 if __name__ == "__main__":

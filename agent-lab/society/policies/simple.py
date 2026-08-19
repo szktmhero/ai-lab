@@ -18,17 +18,29 @@ class SimplePolicy(AgentPolicy):
     3. Revise a supported proposal when local evidence favors another option
     4. Share or request information within the social graph
     5. Support a materially better known proposal
+
+    The support-count term is configurable so that information exchange can be
+    compared with and without an explicit conformity incentive.
     """
 
-    def __init__(self, seed: int = 42):
+    def __init__(
+        self,
+        seed: int = 42,
+        social_evidence_weight: float = 0.05,
+        support_switch_threshold: float = 0.1,
+    ):
+        if social_evidence_weight < 0:
+            raise ValueError("social_evidence_weight must be non-negative")
+        if support_switch_threshold < 0:
+            raise ValueError("support_switch_threshold must be non-negative")
         self.rng = np.random.default_rng(seed)
+        self.social_evidence_weight = social_evidence_weight
+        self.support_switch_threshold = support_switch_threshold
 
     def decide(self, agent: Agent, observation: dict) -> Optional[Action]:
         known = list(agent.known_agents)
-        alive_proposals = [
-            p for p in observation.get("proposals", {}).values()
-            if p.get("alive", True)
-        ]
+        proposal_map = observation.get("proposals", {})
+        alive_proposals = list(proposal_map.values())
         info_ids = observation.get("information_ids", [])
         current_round = observation.get("round", 0)
         options = observation.get("options", [])
@@ -44,25 +56,25 @@ class SimplePolicy(AgentPolicy):
             round=current_round,
         )
 
-        unknown = [
-            aid for aid in observation.get("all_agent_ids", [])
-            if aid != agent.id and aid not in agent.known_agents
-        ]
-        low_trust = [aid for aid in known if agent.trust.get(aid, 0.0) < 0.1]
-        if observation.get("network_mode") == "local" and low_trust and self.rng.random() < 0.1:
-            action.action_type = ActionType.UNFOLLOW
-            action.target_id = int(self.rng.choice(low_trust))
-            return action
-        if observation.get("network_mode") == "local" and unknown and self.rng.random() < 0.03:
-            action.action_type = ActionType.CONTACT
-            action.target_id = int(self.rng.choice(unknown))
-            return action
+        if observation.get("network_mode") == "local":
+            unknown = [
+                aid for aid in observation.get("all_agent_ids", [])
+                if aid != agent.id and aid not in agent.known_agents
+            ]
+            low_trust = [
+                aid for aid in known if agent.trust.get(aid, 0.0) < 0.1
+            ]
+            if low_trust and self.rng.random() < 0.1:
+                action.action_type = ActionType.UNFOLLOW
+                action.target_id = int(self.rng.choice(low_trust))
+                return action
+            if unknown and self.rng.random() < 0.03:
+                action.action_type = ActionType.CONTACT
+                action.target_id = int(self.rng.choice(unknown))
+                return action
 
         preferred_option = int(np.argmax(option_scores))
-        current_proposal = next(
-            (proposal for proposal in alive_proposals if proposal["id"] == agent.current_support),
-            None,
-        )
+        current_proposal = proposal_map.get(agent.current_support)
         if (
             current_proposal is not None
             and current_proposal.get("option_id") != preferred_option
@@ -101,22 +113,48 @@ class SimplePolicy(AgentPolicy):
         # Rule 4: Support a materially better known proposal. This permits
         # support changes without prescribing consensus or a leader.
         if alive_proposals:
-            # Find proposal with most supporters (simple heuristic)
             def proposal_score(proposal):
                 option_id = proposal.get("option_id")
                 preference = option_scores[option_id] if option_id is not None else 0.0
-                social_evidence = 0.05 * (
+                social_evidence = self.social_evidence_weight * (
                     proposal.get("support_count", 0) - proposal.get("oppose_count", 0)
                 )
                 return preference + social_evidence, -proposal["id"]
 
-            best = max(alive_proposals, key=proposal_score)
-            current = next(
-                (proposal for proposal in alive_proposals if proposal["id"] == agent.current_support),
-                None,
-            )
+            # Proposals for the same option have the same evidence score for an
+            # agent.  Retain only the strongest representative per option so a
+            # 128-proposal round requires at most eight final comparisons.
+            prepared = observation.get("proposal_representatives")
+            if prepared is not None:
+                representative_proposals = prepared[
+                    "social" if self.social_evidence_weight > 0 else "evidence"
+                ]
+            else:
+                representatives = {}
+                for proposal in alive_proposals:
+                    option_id = proposal.get("option_id")
+                    existing = representatives.get(option_id)
+                    social_rank = (
+                        self.social_evidence_weight * (
+                            proposal.get("support_count", 0)
+                            - proposal.get("oppose_count", 0)
+                        ),
+                        -proposal["id"],
+                    )
+                    if existing is None or social_rank > existing[0]:
+                        representatives[option_id] = (social_rank, proposal)
+                representative_proposals = [
+                    entry[1] for entry in representatives.values()
+                ]
+
+            best = max(representative_proposals, key=proposal_score)
+            current = proposal_map.get(agent.current_support)
             current_score = proposal_score(current)[0] if current else -np.inf
-            if best["id"] != agent.current_support and proposal_score(best)[0] > current_score + 0.1:
+            if (
+                best["id"] != agent.current_support
+                and proposal_score(best)[0]
+                > current_score + self.support_switch_threshold
+            ):
                 action.action_type = ActionType.SUPPORT
                 action.proposal_id = best["id"]
                 action.confidence = float(self.rng.uniform(0.5, 0.9))

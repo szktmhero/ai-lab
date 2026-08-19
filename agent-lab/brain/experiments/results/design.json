@@ -1,0 +1,49 @@
+{
+  "conditions": [
+    "single_long_context",
+    "sequential_reflection",
+    "flat_ensemble",
+    "brain_full",
+    "brain_no_memory",
+    "brain_no_error_monitor",
+    "brain_static_routing",
+    "brain_no_internal_state_coupling"
+  ],
+  "episode_budget_cap": {
+    "input_units": 48,
+    "model_calls": 4,
+    "output_units": 8
+  },
+  "formal_run_gate": "freeze a real ModelAdapter and exact token-matched condition matrix after reviewing this harness pilot",
+  "independent_random_streams": "task seeds derive from seed, task type, and instance only; condition is excluded from generation",
+  "inference_unit": "per-seed mean over the matched task suite",
+  "known_limitations": [
+    "The deterministic adapter and evidence task grammar are designed test doubles.",
+    "A performance difference validates a causal path, not biological realism or emergence.",
+    "single_long_context intentionally uses fewer calls; compute is reported rather than padded.",
+    "Three pilot seeds cannot support precise inferential claims."
+  ],
+  "matched_factors": [
+    "task instance",
+    "correct candidate",
+    "public evidence sequence",
+    "evidence noise"
+  ],
+  "model": "DeterministicModelAdapter shared unchanged by every condition",
+  "n_instances_per_task_type_per_seed": 20,
+  "n_seeds": 3,
+  "primary_hypotheses": {
+    "H1": "brain_full improves regime-switch and fault recovery over equal-cap baselines",
+    "H2": "memory selectively improves delayed recall and distributed evidence integration",
+    "H3": "error monitoring selectively improves injected-fault recovery",
+    "H4": "adaptive routing avoids robust calls on low-conflict tasks",
+    "H5": "different histories can produce persistent choices that follow memory reset/swap"
+  },
+  "status": "pre-registered deterministic pilot; not a formal LLM result",
+  "task_types": [
+    "latent_rule_switch",
+    "delayed_recall",
+    "fault_recovery",
+    "partial_observation_plan"
+  ]
+}

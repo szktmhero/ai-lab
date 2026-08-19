@@ -1,0 +1,40 @@
+{
+  "n_agents": 128,
+  "n_tasks_per_seed": 50,
+  "n_seeds": 10,
+  "max_rounds": 20,
+  "per_seed_artifacts_saved": false,
+  "matched_factors": [
+    "agent attributes",
+    "generated tasks",
+    "initial information correctness and recipients"
+  ],
+  "conditions": {
+    "independent": {
+      "name": "independent",
+      "network_mode": "independent",
+      "social_evidence_weight": 0.0
+    },
+    "full_evidence": {
+      "name": "full_evidence",
+      "network_mode": "full",
+      "social_evidence_weight": 0.0
+    },
+    "local_evidence": {
+      "name": "local_evidence",
+      "network_mode": "local",
+      "social_evidence_weight": 0.0
+    },
+    "full_social": {
+      "name": "full_social",
+      "network_mode": "full",
+      "social_evidence_weight": 0.05
+    },
+    "local_social": {
+      "name": "local_social",
+      "network_mode": "local",
+      "social_evidence_weight": 0.05
+    }
+  },
+  "analysis_unit": "per-seed mean across the persistent 50-task sequence"
+}
