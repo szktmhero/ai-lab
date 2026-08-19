@@ -1,0 +1,377 @@
+[
+  {
+    "left": "full_evidence",
+    "right": "independent",
+    "difference_definition": "left - right",
+    "question": "Full-network exchange versus fragmented independent proposals, with the support-count term disabled",
+    "matched_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "metrics": {
+      "avg_decision_quality": {
+        "left_mean": 0.9078018250814338,
+        "right_mean": 0.7549827716796984,
+        "mean_difference": 0.1528190534017353,
+        "bootstrap_95_ci": [
+          0.12989193004156355,
+          0.1746365341861264
+        ],
+        "paired_effect_dz": 4.010098801754822,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "avg_consensus": {
+        "left_mean": 0.16734374999999999,
+        "right_mean": 0.0078125,
+        "mean_difference": 0.15953124999999999,
+        "bootstrap_95_ci": [
+          0.15704687499999997,
+          0.1619375
+        ],
+        "paired_effect_dz": 37.99768545218244,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "avg_information_spread": {
+        "left_mean": 0.3365557418200457,
+        "right_mean": 0.1763008551208495,
+        "mean_difference": 0.16025488669919624,
+        "bootstrap_95_ci": [
+          0.15873758756449727,
+          0.16167651576926945
+        ],
+        "paired_effect_dz": 63.77058751310636,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "avg_communication_cost": {
+        "left_mean": 2885.0080000000003,
+        "right_mean": 640.0,
+        "mean_difference": 2245.0080000000003,
+        "bootstrap_95_ci": [
+          2235.9139999999998,
+          2252.862
+        ],
+        "paired_effect_dz": 155.8234915769233,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "round_limit_rate": {
+        "left_mean": 0.998,
+        "right_mean": 0.0,
+        "mean_difference": 0.998,
+        "bootstrap_95_ci": [
+          0.994,
+          1.0
+        ],
+        "paired_effect_dz": 157.797655242402,
+        "exact_sign_flip_p": 0.001953125
+      }
+    }
+  },
+  {
+    "left": "local_evidence",
+    "right": "independent",
+    "difference_definition": "left - right",
+    "question": "Local-network exchange versus fragmented independent proposals, with the support-count term disabled",
+    "matched_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "metrics": {
+      "avg_decision_quality": {
+        "left_mean": 0.9054516505593275,
+        "right_mean": 0.7549827716796984,
+        "mean_difference": 0.1504688788796291,
+        "bootstrap_95_ci": [
+          0.12297068066992267,
+          0.17477935362206676
+        ],
+        "paired_effect_dz": 3.423265212433362,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "avg_consensus": {
+        "left_mean": 0.09440624999999998,
+        "right_mean": 0.0078125,
+        "mean_difference": 0.08659374999999998,
+        "bootstrap_95_ci": [
+          0.0835625,
+          0.08940624999999999
+        ],
+        "paired_effect_dz": 17.34549653838896,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "avg_information_spread": {
+        "left_mean": 0.32920970136374167,
+        "right_mean": 0.1763008551208495,
+        "mean_difference": 0.15290884624289222,
+        "bootstrap_95_ci": [
+          0.15126207069040734,
+          0.1543627782159059
+        ],
+        "paired_effect_dz": 57.973962812514124,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "avg_communication_cost": {
+        "left_mean": 3182.0340000000006,
+        "right_mean": 640.0,
+        "mean_difference": 2542.0340000000006,
+        "bootstrap_95_ci": [
+          2534.2340000000004,
+          2549.308
+        ],
+        "paired_effect_dz": 197.47099816042365,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "round_limit_rate": {
+        "left_mean": 0.9960000000000001,
+        "right_mean": 0.0,
+        "mean_difference": 0.9960000000000001,
+        "bootstrap_95_ci": [
+          0.99,
+          1.0
+        ],
+        "paired_effect_dz": 118.11107060728887,
+        "exact_sign_flip_p": 0.001953125
+      }
+    }
+  },
+  {
+    "left": "full_social",
+    "right": "full_evidence",
+    "difference_definition": "left - right",
+    "question": "Effect of the support-count term in the full network",
+    "matched_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "metrics": {
+      "avg_decision_quality": {
+        "left_mean": 0.9008638188782682,
+        "right_mean": 0.9078018250814338,
+        "mean_difference": -0.0069380062031657586,
+        "bootstrap_95_ci": [
+          -0.016879308306692695,
+          0.004250138107349116
+        ],
+        "paired_effect_dz": -0.3811864183005486,
+        "exact_sign_flip_p": 0.251953125
+      },
+      "avg_consensus": {
+        "left_mean": 0.9621718749999999,
+        "right_mean": 0.16734374999999999,
+        "mean_difference": 0.7948281250000001,
+        "bootstrap_95_ci": [
+          0.793109375,
+          0.796765625
+        ],
+        "paired_effect_dz": 252.35848568422773,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "avg_information_spread": {
+        "left_mean": 0.33462426138743745,
+        "right_mean": 0.3365557418200457,
+        "mean_difference": -0.0019314804326082736,
+        "bootstrap_95_ci": [
+          -0.0025229205654891023,
+          -0.0013861030303257491
+        ],
+        "paired_effect_dz": -2.0203646218558373,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "avg_communication_cost": {
+        "left_mean": 3111.506,
+        "right_mean": 2885.0080000000003,
+        "mean_difference": 226.49800000000005,
+        "bootstrap_95_ci": [
+          221.6919500000001,
+          231.0620500000001
+        ],
+        "paired_effect_dz": 28.205283526710502,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "round_limit_rate": {
+        "left_mean": 1.0,
+        "right_mean": 0.998,
+        "mean_difference": 0.0020000000000000018,
+        "bootstrap_95_ci": [
+          0.0,
+          0.006000000000000005
+        ],
+        "paired_effect_dz": 0.31622776601683794,
+        "exact_sign_flip_p": 1.0
+      }
+    }
+  },
+  {
+    "left": "local_social",
+    "right": "local_evidence",
+    "difference_definition": "left - right",
+    "question": "Effect of the support-count term in the local network",
+    "matched_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "metrics": {
+      "avg_decision_quality": {
+        "left_mean": 0.9022130113117004,
+        "right_mean": 0.9054516505593275,
+        "mean_difference": -0.003238639247627051,
+        "bootstrap_95_ci": [
+          -0.017939687674169747,
+          0.011594914163104457
+        ],
+        "paired_effect_dz": -0.12846026710409778,
+        "exact_sign_flip_p": 0.681640625
+      },
+      "avg_consensus": {
+        "left_mean": 0.961703125,
+        "right_mean": 0.09440624999999998,
+        "mean_difference": 0.8672968749999999,
+        "bootstrap_95_ci": [
+          0.8639683593749999,
+          0.8708750000000001
+        ],
+        "paired_effect_dz": 148.124915823377,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "avg_information_spread": {
+        "left_mean": 0.32669611372735907,
+        "right_mean": 0.32920970136374167,
+        "mean_difference": -0.002513587636382669,
+        "bootstrap_95_ci": [
+          -0.0031043484089454372,
+          -0.001970019543797788
+        ],
+        "paired_effect_dz": -2.604402435556389,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "avg_communication_cost": {
+        "left_mean": 3391.156,
+        "right_mean": 3182.0340000000006,
+        "mean_difference": 209.122,
+        "bootstrap_95_ci": [
+          202.25395,
+          216.31600000000003
+        ],
+        "paired_effect_dz": 17.352513517447623,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "round_limit_rate": {
+        "left_mean": 0.998,
+        "right_mean": 0.9960000000000001,
+        "mean_difference": 0.0020000000000000018,
+        "bootstrap_95_ci": [
+          -0.0040000000000000036,
+          0.008000000000000007
+        ],
+        "paired_effect_dz": 0.17616606585441105,
+        "exact_sign_flip_p": 1.0
+      }
+    }
+  },
+  {
+    "left": "local_evidence",
+    "right": "full_evidence",
+    "difference_definition": "left - right",
+    "question": "Effect of sparse versus full topology without the support-count term",
+    "matched_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "metrics": {
+      "avg_decision_quality": {
+        "left_mean": 0.9054516505593275,
+        "right_mean": 0.9078018250814338,
+        "mean_difference": -0.0023501745221062077,
+        "bootstrap_95_ci": [
+          -0.016539108739645137,
+          0.011458573411840834
+        ],
+        "paired_effect_dz": -0.09858014585281442,
+        "exact_sign_flip_p": 0.76953125
+      },
+      "avg_consensus": {
+        "left_mean": 0.09440624999999998,
+        "right_mean": 0.16734374999999999,
+        "mean_difference": -0.0729375,
+        "bootstrap_95_ci": [
+          -0.076265625,
+          -0.07
+        ],
+        "paired_effect_dz": -13.5346364818513,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "avg_information_spread": {
+        "left_mean": 0.32920970136374167,
+        "right_mean": 0.3365557418200457,
+        "mean_difference": -0.0073460404563040205,
+        "bootstrap_95_ci": [
+          -0.008094638363524654,
+          -0.006631242076431025
+        ],
+        "paired_effect_dz": -5.8947768928443,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "avg_communication_cost": {
+        "left_mean": 3182.0340000000006,
+        "right_mean": 2885.0080000000003,
+        "mean_difference": 297.026,
+        "bootstrap_95_ci": [
+          288.12,
+          306.96600000000007
+        ],
+        "paired_effect_dz": 18.51697302191524,
+        "exact_sign_flip_p": 0.001953125
+      },
+      "round_limit_rate": {
+        "left_mean": 0.9960000000000001,
+        "right_mean": 0.998,
+        "mean_difference": -0.0020000000000000018,
+        "bootstrap_95_ci": [
+          -0.008000000000000007,
+          0.0040000000000000036
+        ],
+        "paired_effect_dz": -0.17616606585441105,
+        "exact_sign_flip_p": 1.0
+      }
+    }
+  }
+]

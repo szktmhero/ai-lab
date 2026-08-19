@@ -37,7 +37,17 @@ class Society:
         self.network_mode = network_mode
         self.action_costs = dict(ACTION_COSTS if action_costs is None else action_costs)
 
-        self.rng = np.random.default_rng(seed)
+        # Keep condition-specific randomness (the network) isolated from the
+        # agent population and task information.  Without independent streams,
+        # using the same seed under ``independent``, ``full``, and ``local``
+        # produced different preferences and evidence assignments because each
+        # topology consumed a different number of random draws during setup.
+        seed_sequence = np.random.SeedSequence(seed)
+        agent_seed, network_seed, information_seed, dynamics_seed = seed_sequence.spawn(4)
+        self.agent_rng = np.random.default_rng(agent_seed)
+        self.network_rng = np.random.default_rng(network_seed)
+        self.information_rng = np.random.default_rng(information_seed)
+        self.rng = np.random.default_rng(dynamics_seed)
         self.round_count = 0
         self.task_count = 0
 
@@ -64,19 +74,22 @@ class Society:
         for i in range(self.agent_count):
             agent = Agent(
                 id=i,
-                preferences=(self.rng.standard_normal(PREFERENCE_DIM) * 0.3).astype(np.float32),
-                beliefs=(self.rng.standard_normal(BELIEF_DIM) * 0.3).astype(np.float32),
-                confidence=float(self.rng.uniform(0.2, 0.8)),
-                risk_tolerance=float(self.rng.random()),
-                novelty_preference=float(self.rng.random()),
-                communication_tendency=float(self.rng.random()),
+                preferences=(self.agent_rng.standard_normal(PREFERENCE_DIM) * 0.3).astype(np.float32),
+                beliefs=(self.agent_rng.standard_normal(BELIEF_DIM) * 0.3).astype(np.float32),
+                confidence=float(self.agent_rng.uniform(0.2, 0.8)),
+                risk_tolerance=float(self.agent_rng.random()),
+                novelty_preference=float(self.agent_rng.random()),
+                communication_tendency=float(self.agent_rng.random()),
             )
             if self.network_mode == "local":
-                agent.initialize_social(list(range(self.agent_count)), self.rng, self.avg_degree)
+                agent.initialize_social(
+                    list(range(self.agent_count)), self.network_rng, self.avg_degree
+                )
             elif self.network_mode == "full":
                 agent.known_agents = set(range(self.agent_count)) - {i}
                 agent.trust = {
-                    aid: float(self.rng.uniform(0.1, 0.4)) for aid in agent.known_agents
+                    aid: float(self.network_rng.uniform(0.1, 0.4))
+                    for aid in agent.known_agents
                 }
             # Random initial energy variance
             agent.energy = self.budget
@@ -402,7 +415,7 @@ class Society:
                 accuracy=info.get("accuracy", 0.8),
                 source_agent=-1,
                 round_created=self.round_count,
-                correct=bool(self.rng.random() < info.get("accuracy", 0.8)),
+                correct=bool(self.information_rng.random() < info.get("accuracy", 0.8)),
                 option_id=int(info.get("option_id", 0)),
                 value=float(info.get("value", 0.0)),
             )
@@ -411,8 +424,14 @@ class Society:
 
         # Distribute to random subset of agents
         for info_id, info_obj in self.information_pool.items():
-            n_recipients = self.rng.integers(5, min(40, self.agent_count))
-            recipients = self.rng.choice(agent_ids, size=n_recipients, replace=False)
+            if not agent_ids:
+                continue
+            minimum = min(5, self.agent_count)
+            maximum = min(40, self.agent_count)
+            n_recipients = int(self.information_rng.integers(minimum, maximum + 1))
+            recipients = self.information_rng.choice(
+                agent_ids, size=n_recipients, replace=False
+            )
             for rid in recipients:
                 self.agents[int(rid)].known_information.append(info_id)
 

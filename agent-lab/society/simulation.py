@@ -43,15 +43,31 @@ def run_simulation(
     society.start_task(task)
     previous_support = None
     stable_rounds = 0
+    stop_reason = "max_rounds"
 
     for round_num in range(max_rounds):
         society.round_count = round_num
         round_events = []
         decisions = []
+        proposal_snapshot = {
+            proposal_id: proposal.to_dict()
+            for proposal_id, proposal in society.proposals.items()
+            if proposal.alive
+        }
+        proposal_representatives = (
+            _group_proposal_representatives(proposal_snapshot)
+            if society.network_mode == "full" else None
+        )
 
         # All decisions use the same start-of-round state, avoiding ID-order bias.
         for agent in society.get_all_alive_agents():
-            observation = _build_observation(agent, society, round_num)
+            observation = _build_observation(
+                agent,
+                society,
+                round_num,
+                proposal_snapshot=proposal_snapshot,
+                proposal_representatives=proposal_representatives,
+            )
             action = policy.decide(agent, observation)
             if action is not None:
                 action.round = round_num
@@ -78,6 +94,7 @@ def run_simulation(
         stable_rounds = stable_rounds + 1 if support == previous_support else 0
         previous_support = support
         if round_num >= 4 and stable_rounds >= 3 and any(count > 0 for _, count, _ in support):
+            stop_reason = "stable_support"
             break
 
     # Decide winner
@@ -91,29 +108,48 @@ def run_simulation(
     society.settle_task(winner)
 
     # Record task end
-    task_summary = observer.record_task_end(society, task["id"], winner)
+    task_summary = observer.record_task_end(
+        society, task["id"], winner, stop_reason=stop_reason
+    )
 
     return {
         "winner": winner,
         "rounds": society.round_count + 1,
         "proposals": len(society.proposals),
         "majority_winner": society.majority_vote(),
+        "stop_reason": stop_reason,
         "task_summary": task_summary,
     }
 
 
-def _build_observation(agent, society: Society, round_num: int) -> dict:
+def _build_observation(
+    agent,
+    society: Society,
+    round_num: int,
+    proposal_snapshot: Optional[dict] = None,
+    proposal_representatives: Optional[dict] = None,
+) -> dict:
     """Build observation dict for an agent."""
+    if proposal_snapshot is None:
+        proposal_snapshot = {
+            proposal_id: proposal.to_dict()
+            for proposal_id, proposal in society.proposals.items()
+            if proposal.alive
+        }
+
     # Known proposals (only alive ones the agent knows about)
-    known_proposals = {}
-    for pid, proposal in society.proposals.items():
-        if proposal.alive:
-            # Agent knows about proposals they support/oppose or from known agents
-            if (agent.id in proposal.supporters or
-                agent.id in proposal.opposers or
-                proposal.creator in agent.known_agents or
-                any(supporter in agent.known_agents for supporter in proposal.supporters)):
-                known_proposals[pid] = proposal.to_dict()
+    if society.network_mode == "full":
+        known_proposals = proposal_snapshot
+    else:
+        known_proposals = {}
+        for proposal_id, proposal in proposal_snapshot.items():
+            if (
+                agent.id in proposal["supporters"]
+                or agent.id in proposal["opposers"]
+                or proposal["creator"] in agent.known_agents
+                or not agent.known_agents.isdisjoint(proposal["supporters"])
+            ):
+                known_proposals[proposal_id] = proposal
 
     # Known information
     known_info = [
@@ -128,6 +164,7 @@ def _build_observation(agent, society: Society, round_num: int) -> dict:
     return {
         "round": round_num,
         "proposals": known_proposals,
+        "proposal_representatives": proposal_representatives,
         "information": known_info,
         "information_ids": agent.known_information,
         "known_agents": list(agent.known_agents),
@@ -136,6 +173,36 @@ def _build_observation(agent, society: Society, round_num: int) -> dict:
         "trust": agent.trust,
         "budget_remaining": agent.energy,
         "options": society.current_task.get("options", []),
+    }
+
+
+def _group_proposal_representatives(proposals: dict) -> dict:
+    """Pre-compute full-network candidates once for every agent in a round."""
+    evidence = {}
+    social = {}
+    for proposal in proposals.values():
+        option_id = proposal.get("option_id")
+        if option_id not in evidence or proposal["id"] < evidence[option_id]["id"]:
+            evidence[option_id] = proposal
+
+        rank = (
+            proposal.get("support_count", 0) - proposal.get("oppose_count", 0),
+            -proposal["id"],
+        )
+        existing = social.get(option_id)
+        if existing is None:
+            social[option_id] = proposal
+        else:
+            existing_rank = (
+                existing.get("support_count", 0) - existing.get("oppose_count", 0),
+                -existing["id"],
+            )
+            if rank > existing_rank:
+                social[option_id] = proposal
+
+    return {
+        "evidence": list(evidence.values()),
+        "social": list(social.values()),
     }
 
 
