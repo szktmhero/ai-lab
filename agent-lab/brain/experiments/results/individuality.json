@@ -1,0 +1,45 @@
+{
+  "after_memory_reset": {
+    "a": [
+      0,
+      0,
+      0
+    ],
+    "b": [
+      0,
+      0,
+      0
+    ]
+  },
+  "after_memory_swap": {
+    "a": [
+      1,
+      1,
+      1
+    ],
+    "b": [
+      0,
+      0,
+      0
+    ]
+  },
+  "between_history_divergence": 1,
+  "history_a_choices": [
+    0,
+    0,
+    0
+  ],
+  "history_b_choices": [
+    1,
+    1,
+    1
+  ],
+  "interpretation": "The harness can create and causally remove history-dependent choices. Because the history cue and deterministic memory rule were designed, this validates the manipulation rather than demonstrating emergent individuality.",
+  "reset_divergence": 0,
+  "status": "causal-path smoke test only; not evidence of personality",
+  "swap_followed_memory": 1,
+  "within_history_consistency": {
+    "a": 1.0,
+    "b": 1.0
+  }
+}

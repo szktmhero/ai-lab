@@ -1,0 +1,632 @@
+[
+  {
+    "description": "Full recurrent architecture versus a single full-context inference",
+    "left": "brain_full",
+    "matched_seeds": [
+      0,
+      1,
+      2
+    ],
+    "metrics": {
+      "accuracy": {
+        "bootstrap_95_ci": [
+          0.5,
+          0.5
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 0.5,
+        "paired_differences": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "avg_input_units": {
+        "bootstrap_95_ci": [
+          7.0,
+          7.0
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 7.0,
+        "paired_differences": [
+          7.0,
+          7.0,
+          7.0
+        ]
+      },
+      "avg_model_calls": {
+        "bootstrap_95_ci": [
+          2.75,
+          2.75
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 2.75,
+        "paired_differences": [
+          2.75,
+          2.75,
+          2.75
+        ]
+      },
+      "delayed_recall_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "fault_recovery_accuracy": {
+        "bootstrap_95_ci": [
+          1.0,
+          1.0
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 1.0,
+        "paired_differences": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "regime_switch_accuracy": {
+        "bootstrap_95_ci": [
+          1.0,
+          1.0
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 1.0,
+        "paired_differences": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "right": "single_long_context"
+  },
+  {
+    "description": "Full recurrent architecture versus a strong sequential reflection baseline",
+    "left": "brain_full",
+    "matched_seeds": [
+      0,
+      1,
+      2
+    ],
+    "metrics": {
+      "accuracy": {
+        "bootstrap_95_ci": [
+          0.25,
+          0.25
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 0.25,
+        "paired_differences": [
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "avg_input_units": {
+        "bootstrap_95_ci": [
+          -4.25,
+          -4.25
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": -4.25,
+        "paired_differences": [
+          -4.25,
+          -4.25,
+          -4.25
+        ]
+      },
+      "avg_model_calls": {
+        "bootstrap_95_ci": [
+          -0.25,
+          -0.25
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": -0.25,
+        "paired_differences": [
+          -0.25,
+          -0.25,
+          -0.25
+        ]
+      },
+      "delayed_recall_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "fault_recovery_accuracy": {
+        "bootstrap_95_ci": [
+          1.0,
+          1.0
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 1.0,
+        "paired_differences": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "regime_switch_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "right": "sequential_reflection"
+  },
+  {
+    "description": "Full recurrent architecture versus flat partitioned aggregation",
+    "left": "brain_full",
+    "matched_seeds": [
+      0,
+      1,
+      2
+    ],
+    "metrics": {
+      "accuracy": {
+        "bootstrap_95_ci": [
+          0.025000000000000022,
+          0.050000000000000044
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 0.03333333333333336,
+        "paired_differences": [
+          0.025000000000000022,
+          0.025000000000000022,
+          0.050000000000000044
+        ]
+      },
+      "avg_input_units": {
+        "bootstrap_95_ci": [
+          4.0,
+          4.0
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 4.0,
+        "paired_differences": [
+          4.0,
+          4.0,
+          4.0
+        ]
+      },
+      "avg_model_calls": {
+        "bootstrap_95_ci": [
+          -0.25,
+          -0.25
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": -0.25,
+        "paired_differences": [
+          -0.25,
+          -0.25,
+          -0.25
+        ]
+      },
+      "delayed_recall_accuracy": {
+        "bootstrap_95_ci": [
+          0.09999999999999998,
+          0.19999999999999996
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 0.1333333333333333,
+        "paired_differences": [
+          0.09999999999999998,
+          0.09999999999999998,
+          0.19999999999999996
+        ]
+      },
+      "fault_recovery_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "regime_switch_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "right": "flat_ensemble"
+  },
+  {
+    "description": "Causal effect of bounded episodic retrieval",
+    "left": "brain_full",
+    "matched_seeds": [
+      0,
+      1,
+      2
+    ],
+    "metrics": {
+      "accuracy": {
+        "bootstrap_95_ci": [
+          0.6,
+          0.6375
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 0.6166666666666667,
+        "paired_differences": [
+          0.6125,
+          0.6,
+          0.6375
+        ]
+      },
+      "avg_input_units": {
+        "bootstrap_95_ci": [
+          3.25,
+          3.25
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 3.25,
+        "paired_differences": [
+          3.25,
+          3.25,
+          3.25
+        ]
+      },
+      "avg_model_calls": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "delayed_recall_accuracy": {
+        "bootstrap_95_ci": [
+          0.65,
+          0.8000000000000002
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 0.7166666666666667,
+        "paired_differences": [
+          0.65,
+          0.7,
+          0.8
+        ]
+      },
+      "fault_recovery_accuracy": {
+        "bootstrap_95_ci": [
+          0.6999999999999998,
+          0.8000000000000002
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 0.75,
+        "paired_differences": [
+          0.8,
+          0.7,
+          0.75
+        ]
+      },
+      "regime_switch_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "right": "brain_no_memory"
+  },
+  {
+    "description": "Causal effect of conflict-triggered robust processing",
+    "left": "brain_full",
+    "matched_seeds": [
+      0,
+      1,
+      2
+    ],
+    "metrics": {
+      "accuracy": {
+        "bootstrap_95_ci": [
+          0.25,
+          0.25
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 0.25,
+        "paired_differences": [
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "avg_input_units": {
+        "bootstrap_95_ci": [
+          4.5,
+          4.5
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 4.5,
+        "paired_differences": [
+          4.5,
+          4.5,
+          4.5
+        ]
+      },
+      "avg_model_calls": {
+        "bootstrap_95_ci": [
+          0.75,
+          0.75
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 0.75,
+        "paired_differences": [
+          0.75,
+          0.75,
+          0.75
+        ]
+      },
+      "delayed_recall_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "fault_recovery_accuracy": {
+        "bootstrap_95_ci": [
+          1.0,
+          1.0
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 1.0,
+        "paired_differences": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "regime_switch_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "right": "brain_no_error_monitor"
+  },
+  {
+    "description": "Adaptive versus fixed robust routing",
+    "left": "brain_full",
+    "matched_seeds": [
+      0,
+      1,
+      2
+    ],
+    "metrics": {
+      "accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "avg_input_units": {
+        "bootstrap_95_ci": [
+          -1.25,
+          -1.25
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": -1.25,
+        "paired_differences": [
+          -1.25,
+          -1.25,
+          -1.25
+        ]
+      },
+      "avg_model_calls": {
+        "bootstrap_95_ci": [
+          -0.25,
+          -0.25
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": -0.25,
+        "paired_differences": [
+          -0.25,
+          -0.25,
+          -0.25
+        ]
+      },
+      "delayed_recall_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "fault_recovery_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "regime_switch_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "right": "brain_static_routing"
+  },
+  {
+    "description": "Effect of connecting observed prediction error to routing",
+    "left": "brain_full",
+    "matched_seeds": [
+      0,
+      1,
+      2
+    ],
+    "metrics": {
+      "accuracy": {
+        "bootstrap_95_ci": [
+          0.25,
+          0.25
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 0.25,
+        "paired_differences": [
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "avg_input_units": {
+        "bootstrap_95_ci": [
+          4.5,
+          4.5
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 4.5,
+        "paired_differences": [
+          4.5,
+          4.5,
+          4.5
+        ]
+      },
+      "avg_model_calls": {
+        "bootstrap_95_ci": [
+          0.75,
+          0.75
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 0.75,
+        "paired_differences": [
+          0.75,
+          0.75,
+          0.75
+        ]
+      },
+      "delayed_recall_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "fault_recovery_accuracy": {
+        "bootstrap_95_ci": [
+          1.0,
+          1.0
+        ],
+        "exact_sign_flip_p": 0.25,
+        "mean_difference": 1.0,
+        "paired_differences": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "regime_switch_accuracy": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "exact_sign_flip_p": 1.0,
+        "mean_difference": 0.0,
+        "paired_differences": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "right": "brain_no_internal_state_coupling"
+  }
+]
